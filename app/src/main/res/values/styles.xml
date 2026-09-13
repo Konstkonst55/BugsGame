@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.BugsGame.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/text_body_medium</item>
+        <item name="android:textFontWeight">@integer/font_medium</item>
+        <item name="android:textColor">@color/onSurface</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Widget.BugsGame.TextView.Title" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/text_label_large</item>
+        <item name="android:textFontWeight">@integer/font_bold</item>
+        <item name="android:textColor">@color/onSecondaryContainer</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+</resources>
