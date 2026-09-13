@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium">
+
+    <ScrollView
+        android:id="@+id/svHome"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="@dimen/size_zero"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvFullName"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvGender"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvFullName" />
+
+            <TextView
+                android:id="@+id/tvCourse"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvGender" />
+
+            <TextView
+                android:id="@+id/tvDifficulty"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCourse" />
+
+            <TextView
+                android:id="@+id/tvBirthDate"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDifficulty" />
+
+            <ImageView
+                android:id="@+id/ivZodiac"
+                android:layout_width="@dimen/size_xxlarge"
+                android:layout_height="@dimen/size_xxlarge"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:contentDescription="@string/zodiac_unknown_cd"
+                android:importantForAccessibility="yes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvBirthDate" />
+
+            <TextView
+                android:id="@+id/tvZodiacName"
+                style="@style/Widget.BugsGame.TextView.Title"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:gravity="center"
+                android:fontFamily="@font/raleway"
+                android:textSize="@dimen/text_title_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivZodiac" />
+
+            <TextView
+                android:id="@+id/tvEmptyHome"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/zodiac_unknown_name"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
