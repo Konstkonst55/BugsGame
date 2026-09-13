@@ -75,6 +75,7 @@
                 android:layout_marginTop="@dimen/margin_medium"
                 android:contentDescription="@string/zodiac_unknown_cd"
                 android:importantForAccessibility="yes"
+                app:tint="@color/onSecondaryContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvBirthDate" />
