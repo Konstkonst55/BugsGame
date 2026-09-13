@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="stroke_button_default">2dp</dimen>
+
+    <dimen name="scroll_edge_fading">40dp</dimen>
+
+    <dimen name="size_zero">0dp</dimen>
+    <dimen name="size_small">12dp</dimen>
+    <dimen name="size_medium">24dp</dimen>
+    <dimen name="size_large">36dp</dimen>
+    <dimen name="size_xlarge">48dp</dimen>
+    <dimen name="size_xxlarge">96dp</dimen>
+
+    <dimen name="bias_start">0.0</dimen>
+    <dimen name="bias_end">1.0</dimen>
+
+    <dimen name="gl_welcome_center">0.3</dimen>
+    <dimen name="gl_auth_center">0.3</dimen>
+    <dimen name="gl_register_center">0.3</dimen>
+
+    <dimen name="radius_small">9dp</dimen>
+    <dimen name="radius_medium">12dp</dimen>
+    <dimen name="radius_large">16dp</dimen>
+
+    <dimen name="margin_micro">6dp</dimen>
+    <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_xlarge">48dp</dimen>
+
+    <dimen name="padding_micro">6dp</dimen>
+    <dimen name="padding_tiny">8dp</dimen>
+    <dimen name="padding_small">12dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+
+    <dimen name="text_caption">8sp</dimen>
+    <dimen name="text_body_small">12sp</dimen>
+    <dimen name="text_body_medium">14sp</dimen>
+    <dimen name="text_body_large">16sp</dimen>
+    <dimen name="text_label_large">18sp</dimen>
+    <dimen name="text_title_medium">22sp</dimen>
+    <dimen name="text_headline_small">24sp</dimen>
+    <dimen name="text_headline_medium">32sp</dimen>
+    <dimen name="text_display_large">46sp</dimen>
+</resources>
