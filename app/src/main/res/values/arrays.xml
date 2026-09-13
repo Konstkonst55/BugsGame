@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="register_courses">
+        <item>@string/register_course_first</item>
+        <item>@string/register_course_second</item>
+        <item>@string/register_course_third</item>
+        <item>@string/register_course_fourth</item>
+    </string-array>
+</resources>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium"
+    tools:context=".presentation.register.RegisterFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsvRegister"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="@dimen/size_zero"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilFullName"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_hint_full_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="name"
+                    android:fontFamily="@font/raleway"
+                    android:inputType="textPersonName|textCapWords"
+                    tools:ignore="VisualLintTextFieldSize" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvGender"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fontFamily="@font/raleway"
+                android:text="@string/register_hint_gender"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilFullName" />
+
+            <RadioGroup
+                android:id="@+id/rgGender"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvGender">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rbMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway"
+                    android:text="@string/register_gender_male" />
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rbFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:fontFamily="@font/raleway"
+                    android:text="@string/register_gender_female" />
+
+            </RadioGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilCourse"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:hint="@string/register_hint_course"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rgGender">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/actvCourse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway"
+                    android:inputType="none"
+                    android:maxLines="@integer/max_lines_course"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvDifficulty"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fontFamily="@font/raleway"
+                android:text="@string/register_difficulty_value"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilCourse" />
+
+            <SeekBar
+                android:id="@+id/sbDifficulty"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:max="@integer/difficulty_max"
+                android:min="@integer/difficulty_min"
+                android:progress="@integer/difficulty_default"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDifficulty" />
+
+            <TextView
+                android:id="@+id/tvBirthDate"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fontFamily="@font/raleway"
+                android:text="@string/register_text_birth_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sbDifficulty" />
+
+            <CalendarView
+                android:id="@+id/cvBirthDate"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:showWeekNumber="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvBirthDate" />
+
+            <TextView
+                android:id="@+id/tvZodiac"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fontFamily="@font/raleway"
+                android:text="@string/register_text_zodiac"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cvBirthDate" />
+
+            <ImageView
+                android:id="@+id/ivSelectedZodiac"
+                android:layout_width="@dimen/size_xlarge"
+                android:layout_height="@dimen/size_xlarge"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:contentDescription="@string/zodiac_unknown_cd"
+                android:importantForAccessibility="yes"
+                app:layout_constraintEnd_toStartOf="@id/tvSelectedZodiac"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvZodiac" />
+
+            <TextView
+                android:id="@+id/tvSelectedZodiac"
+                style="@style/Widget.BugsGame.TextView.Title"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:fontFamily="@font/raleway"
+                android:text="@string/zodiac_unknown_name"
+                app:layout_constraintBottom_toBottomOf="@id/ivSelectedZodiac"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivSelectedZodiac"
+                app:layout_constraintTop_toTopOf="@id/ivSelectedZodiac" />
+
+            <ProgressBar
+                android:id="@+id/pbZodiac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/ivSelectedZodiac"
+                app:layout_constraintEnd_toEndOf="@id/ivSelectedZodiac"
+                app:layout_constraintStart_toStartOf="@id/ivSelectedZodiac"
+                app:layout_constraintTop_toTopOf="@id/ivSelectedZodiac" />
+
+            <TextView
+                android:id="@+id/tvZodiacState"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/register_empty_zodiac"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/tvSelectedZodiac"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivSelectedZodiac"
+                app:layout_constraintTop_toTopOf="@id/tvSelectedZodiac" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bSubmit"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:text="@string/register_button_submit"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivSelectedZodiac" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
