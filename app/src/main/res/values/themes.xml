@@ -48,5 +48,6 @@
         <item name="colorSurfaceContainerHighest">@color/surfaceContainerHighest</item>
 
         <item name="android:textViewStyle">@style/Widget.BugsGame.TextView</item>
+        <item name="android:fontFamily">@font/raleway</item>
     </style>
 </resources>
