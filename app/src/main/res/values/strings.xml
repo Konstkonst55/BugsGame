@@ -1,3 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BugsGame</string>
+
+    <string name="register_title">Регистрация</string>
+    <string name="register_hint_full_name">ФИО</string>
+    <string name="register_hint_gender">Пол</string>
+    <string name="register_gender_male">Мужской</string>
+    <string name="register_gender_female">Женский</string>
+    <string name="register_hint_course">Курс</string>
+    <string name="register_course_first">1 курс</string>
+    <string name="register_course_second">2 курс</string>
+    <string name="register_course_third">3 курс</string>
+    <string name="register_course_fourth">4 курс</string>
+    <string name="register_text_difficulty">Уровень сложности</string>
+    <string name="register_difficulty_value">Сложность: %1$d</string>
+    <string name="register_text_birth_date">Дата рождения</string>
+    <string name="register_text_zodiac">Знак зодиака</string>
+    <string name="register_button_submit">Продолжить</string>
+    <string name="register_error_full_name">Введите ФИО</string>
+    <string name="register_error_gender">Выберите пол</string>
+    <string name="register_error_course">Выберите курс</string>
+    <string name="register_error_birth_date">Выберите дату рождения</string>
+    <string name="register_error_zodiac_load">Не удалось загрузить знаки зодиака</string>
+    <string name="register_error_retry">Повторить</string>
+    <string name="register_empty_zodiac">Знаки зодиака не найдены</string>
+
+    <string name="home_title_player">Игрок</string>
+    <string name="home_text_full_name">ФИО: %1$s</string>
+    <string name="home_text_gender">Пол: %1$s</string>
+    <string name="home_text_course">Курс: %1$s</string>
+    <string name="home_text_difficulty">Сложность: %1$d</string>
+    <string name="home_text_birth_date">Дата рождения: %1$s</string>
+    <string name="home_title_zodiac">Главная</string>
+    <string name="home_cd_zodiac">Знак зодиака %1$s</string>
+
+    <string name="zodiac_aries_name">Овен</string>
+    <string name="zodiac_taurus_name">Телец</string>
+    <string name="zodiac_gemini_name">Близнецы</string>
+    <string name="zodiac_cancer_name">Рак</string>
+    <string name="zodiac_leo_name">Лев</string>
+    <string name="zodiac_virgo_name">Дева</string>
+    <string name="zodiac_libra_name">Весы</string>
+    <string name="zodiac_scorpio_name">Скорпион</string>
+    <string name="zodiac_sagittarius_name">Стрелец</string>
+    <string name="zodiac_capricorn_name">Козерог</string>
+    <string name="zodiac_aquarius_name">Водолей</string>
+    <string name="zodiac_pisces_name">Рыбы</string>
+
+    <string name="zodiac_aries_cd">Иконка знака зодиака Овен</string>
+    <string name="zodiac_taurus_cd">Иконка знака зодиака Телец</string>
+    <string name="zodiac_gemini_cd">Иконка знака зодиака Близнецы</string>
+    <string name="zodiac_cancer_cd">Иконка знака зодиака Рак</string>
+    <string name="zodiac_leo_cd">Иконка знака зодиака Лев</string>
+    <string name="zodiac_virgo_cd">Иконка знака зодиака Дева</string>
+    <string name="zodiac_libra_cd">Иконка знака зодиака Весы</string>
+    <string name="zodiac_scorpio_cd">Иконка знака зодиака Скорпион</string>
+    <string name="zodiac_sagittarius_cd">Иконка знака зодиака Стрелец</string>
+    <string name="zodiac_capricorn_cd">Иконка знака зодиака Козерог</string>
+    <string name="zodiac_aquarius_cd">Иконка знака зодиака Водолей</string>
+    <string name="zodiac_pisces_cd">Иконка знака зодиака Рыбы</string>
+
+    <string name="zodiac_unknown_name">Знак зодиака не определён</string>
+    <string name="zodiac_unknown_cd">Знак зодиака не определён</string>
 </resources>
