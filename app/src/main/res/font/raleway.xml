@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <font
+        android:font="@font/raleway_thin"
+        android:fontWeight="@integer/font_thin"
+        app:font="@font/raleway_thin"
+        app:fontWeight="@integer/font_thin" />
+
+    <font
+        android:font="@font/raleway_extralight"
+        android:fontWeight="@integer/font_extra_light"
+        app:font="@font/raleway_extralight"
+        app:fontWeight="@integer/font_extra_light" />
+
+    <font
+        android:font="@font/raleway_light"
+        android:fontWeight="@integer/font_light"
+        app:font="@font/raleway_light"
+        app:fontWeight="@integer/font_light" />
+
+    <font
+        android:font="@font/raleway_regular"
+        android:fontWeight="@integer/font_regular"
+        app:font="@font/raleway_regular"
+        app:fontWeight="@integer/font_regular" />
+
+    <font
+        android:font="@font/raleway_medium"
+        android:fontWeight="@integer/font_medium"
+        app:font="@font/raleway_medium"
+        app:fontWeight="@integer/font_medium" />
+
+    <font
+        android:font="@font/raleway_semibold"
+        android:fontWeight="@integer/font_semi_bold"
+        app:font="@font/raleway_semibold"
+        app:fontWeight="@integer/font_semi_bold" />
+
+    <font
+        android:font="@font/raleway_bold"
+        android:fontWeight="@integer/font_bold"
+        app:font="@font/raleway_bold"
+        app:fontWeight="@integer/font_bold" />
+
+    <font
+        android:font="@font/raleway_extrabold"
+        android:fontWeight="@integer/font_extra_bold"
+        app:font="@font/raleway_extrabold"
+        app:fontWeight="@integer/font_extra_bold" />
+
+    <font
+        android:font="@font/raleway_black"
+        android:fontWeight="@integer/font_black"
+        app:font="@font/raleway_black"
+        app:fontWeight="@integer/font_black" />
+
+</font-family>
