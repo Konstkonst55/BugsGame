@@ -1,8 +1,8 @@
 package com.kxnst.bugsgame.domain.zodiac
 
 import com.kxnst.bugsgame.data.zodiac.ZodiacSign
+import org.junit.Test
 import java.time.LocalDate
-import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ZodiacCalculatorTest {

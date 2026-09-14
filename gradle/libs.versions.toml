@@ -2,6 +2,7 @@
 coreKtx = "1.19.0"
 appcompat = "1.8.0"
 fragment = "1.9.0"
+junit = "4.13.2"
 lifecycle = "2.11.0"
 navigation = "2.10.1"
 constraintlayout = "2.2.2"
@@ -19,6 +20,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+junit = { module = "junit:junit", version.ref = "junit" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
