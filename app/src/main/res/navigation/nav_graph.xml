@@ -18,6 +18,25 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.kxnst.bugsgame.presentation.home.HomeFragment"
-        android:label="@string/home_title_zodiac" />
+        android:label="@string/home_title" />
+
+    <fragment
+        android:id="@+id/rulesFragment"
+        android:name="com.kxnst.bugsgame.presentation.rules.RulesFragment"
+        android:label="@string/rules_title" />
+
+    <fragment
+        android:id="@+id/authorsFragment"
+        android:name="com.kxnst.bugsgame.presentation.authors.AuthorsFragment"
+        android:label="@string/authors_title" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.kxnst.bugsgame.presentation.settings.SettingsFragment"
+        android:label="@string/settings_title" />
+
+    <action
+        android:id="@+id/action_global_settings"
+        app:destination="@id/settingsFragment" />
 
 </navigation>
