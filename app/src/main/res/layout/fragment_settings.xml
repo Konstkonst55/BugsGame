@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium">
+
+    <ScrollView
+        android:id="@+id/svSettings"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="@dimen/size_zero"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvSpeed"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_speed_title"
+                app:layout_constraintBottom_toBottomOf="@id/tilSpeed"
+                app:layout_constraintEnd_toStartOf="@id/tilSpeed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tilSpeed" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilSpeed"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="@dimen/size_xxlarge"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/actvSpeed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_cd_speed_picker"
+                    android:inputType="none"
+                    android:maxLines="@integer/max_lines_settings_value" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvMaxCockroaches"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:text="@string/settings_max_cockroaches_title"
+                app:layout_constraintBottom_toBottomOf="@id/tilMaxCockroaches"
+                app:layout_constraintEnd_toStartOf="@id/tilMaxCockroaches"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tilMaxCockroaches" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilMaxCockroaches"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="@dimen/size_xxlarge"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilSpeed" >
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/actvMaxCockroaches"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_cd_max_cockroaches_picker"
+                    android:inputType="none"
+                    android:maxLines="@integer/max_lines_settings_value" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvBonusInterval"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:text="@string/settings_bonus_interval_title"
+                app:layout_constraintBottom_toBottomOf="@id/tilBonusInterval"
+                app:layout_constraintEnd_toStartOf="@id/tilBonusInterval"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tilBonusInterval" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilBonusInterval"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="@dimen/size_xxlarge"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilMaxCockroaches">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/actvBonusInterval"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_cd_bonus_interval_picker"
+                    android:inputType="none"
+                    android:maxLines="@integer/max_lines_settings_value" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvRoundDuration"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_large"
+                android:text="@string/settings_round_duration_title"
+                app:layout_constraintBottom_toBottomOf="@id/tilRoundDuration"
+                app:layout_constraintEnd_toStartOf="@id/tilRoundDuration"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tilRoundDuration" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilRoundDuration"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="@dimen/size_xxlarge"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilBonusInterval">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/actvRoundDuration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/settings_cd_round_duration_picker"
+                    android:inputType="none"
+                    android:maxLines="@integer/max_lines_settings_value" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
