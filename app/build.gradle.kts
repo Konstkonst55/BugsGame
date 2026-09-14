@@ -35,15 +35,10 @@ android {
     signingConfigs {
         create("release") {
             if (hasReleaseSigning) {
-                val releaseKeystorePath = requireNotNull(keystorePath)
-                val releaseKeystorePassword = requireNotNull(keystorePassword)
-                val releaseKeyAlias = requireNotNull(keyAlias)
-                val releaseKeyPassword = requireNotNull(keyPassword)
-
-                storeFile = file(releaseKeystorePath)
-                storePassword = releaseKeystorePassword
-                this.keyAlias = releaseKeyAlias
-                this.keyPassword = releaseKeyPassword
+                storeFile = file(requireNotNull(keystorePath))
+                storePassword = requireNotNull(keystorePassword)
+                this.keyAlias = requireNotNull(keyAlias)
+                this.keyPassword = requireNotNull(keyPassword)
             }
         }
     }
