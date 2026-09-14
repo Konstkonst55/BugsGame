@@ -7,18 +7,6 @@ val releaseTag = System.getenv("GITHUB_REF_NAME")
 val versionNameValue = releaseTag?.removePrefix("v")?.takeIf { it.isNotBlank() } ?: "1.0.0"
 val versionCodeValue = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
 
-val keystorePath = providers.gradleProperty("keystorePath").orNull
-val keystorePassword = providers.gradleProperty("keystorePassword").orNull
-val keyAlias = providers.gradleProperty("keyAlias").orNull
-val keyPassword = providers.gradleProperty("keyPassword").orNull
-
-val hasReleaseSigning = listOf(
-    keystorePath,
-    keystorePassword,
-    keyAlias,
-    keyPassword
-).all { !it.isNullOrBlank() }
-
 android {
     namespace = "com.kxnst.bugsgame"
     compileSdk = 37
@@ -32,17 +20,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        create("release") {
-            if (hasReleaseSigning) {
-                storeFile = file(requireNotNull(keystorePath))
-                storePassword = requireNotNull(keystorePassword)
-                this.keyAlias = requireNotNull(keyAlias)
-                this.keyPassword = requireNotNull(keyPassword)
-            }
-        }
-    }
-
     buildTypes {
         getByName("debug") {
             applicationIdSuffix = ".debug"
@@ -51,12 +28,7 @@ android {
 
         getByName("release") {
             isMinifyEnabled = false
-
-            signingConfig = if (hasReleaseSigning) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
-            }
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
