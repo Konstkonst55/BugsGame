@@ -7,10 +7,10 @@ val releaseTag = System.getenv("GITHUB_REF_NAME")
 val versionNameValue = releaseTag?.removePrefix("v")?.takeIf { it.isNotBlank() } ?: "1.0.0"
 val versionCodeValue = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull()?.coerceAtLeast(1) ?: 1
 
-val keystorePath = System.getenv("KEYSTORE_PATH")
-val keystorePassword = System.getenv("KEYSTORE_PASSWORD")
-val keyAlias = System.getenv("KEY_ALIAS")
-val keyPassword = System.getenv("KEY_PASSWORD")
+val keystorePath = providers.gradleProperty("keystorePath").orNull
+val keystorePassword = providers.gradleProperty("keystorePassword").orNull
+val keyAlias = providers.gradleProperty("keyAlias").orNull
+val keyPassword = providers.gradleProperty("keyPassword").orNull
 
 val hasReleaseSigning = listOf(
     keystorePath,
@@ -35,10 +35,15 @@ android {
     signingConfigs {
         create("release") {
             if (hasReleaseSigning) {
-                storeFile = file(keystorePath!!)
-                storePassword = keystorePassword
-                this.keyAlias = keyAlias
-                this.keyPassword = keyPassword
+                val releaseKeystorePath = requireNotNull(keystorePath)
+                val releaseKeystorePassword = requireNotNull(keystorePassword)
+                val releaseKeyAlias = requireNotNull(keyAlias)
+                val releaseKeyPassword = requireNotNull(keyPassword)
+
+                storeFile = file(releaseKeystorePath)
+                storePassword = releaseKeystorePassword
+                this.keyAlias = releaseKeyAlias
+                this.keyPassword = releaseKeyPassword
             }
         }
     }
@@ -51,6 +56,7 @@ android {
 
         getByName("release") {
             isMinifyEnabled = false
+
             signingConfig = if (hasReleaseSigning) {
                 signingConfigs.getByName("release")
             } else {
