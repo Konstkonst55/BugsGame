@@ -5,6 +5,7 @@ import com.kxnst.bugsgame.data.settings.SharedPreferencesGameSettingsRepository
 import com.kxnst.bugsgame.data.zodiac.AndroidResourceZodiacRepository
 import com.kxnst.bugsgame.data.zodiac.ZodiacRepository
 import com.kxnst.bugsgame.domain.zodiac.ZodiacCalculator
+import com.kxnst.bugsgame.presentation.game.GameViewModel
 import com.kxnst.bugsgame.presentation.register.PlayerViewModel
 import com.kxnst.bugsgame.presentation.settings.GameSettingsViewModel
 
@@ -19,4 +20,5 @@ val appModule = module {
 
     viewModel { PlayerViewModel(get(), get()) }
     viewModel { GameSettingsViewModel(get()) }
+    viewModel { GameViewModel(get()) }
 }

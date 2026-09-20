@@ -87,4 +87,13 @@
     <string name="menu_home">Главная</string>
     <string name="menu_rules">Правила</string>
     <string name="menu_authors">Авторы</string>
+
+    <string name="game_title">Игра</string>
+    <string name="game_score_title">Очки</string>
+    <string name="game_score_value">%1$d</string>
+    <string name="game_penalty_title">Штрафы</string>
+    <string name="game_penalty_value">%1$d</string>
+    <string name="game_instruction">Нажимайте на жуков, чтобы заработать очки. Промахи увеличивают штраф.</string>
+    <string name="game_cd_board">Игровое поле. Нажимайте на движущихся жуков.</string>
+    <string name="menu_game">Игра</string>
 </resources>

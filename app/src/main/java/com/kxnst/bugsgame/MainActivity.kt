@@ -40,13 +40,15 @@ class MainActivity : AppCompatActivity() {
                 val isSettings = destination.id == R.id.settingsFragment
                 val isBottomDestination = destination.id in setOf(
                     R.id.homeFragment,
+                    R.id.gameFragment,
                     R.id.rulesFragment,
                     R.id.authorsFragment
                 )
 
                 binding.tbMain.title = destination.label
                 binding.bnvMain.isVisible = isBottomDestination
-                binding.tbMain.menu.findItem(R.id.action_toolbar_settings).isVisible = isBottomDestination
+                binding.tbMain.menu.findItem(R.id.action_toolbar_settings).isVisible =
+                    isBottomDestination
 
                 if (isSettings) {
                     binding.tbMain.navigationIcon = AppCompatResources.getDrawable(
@@ -60,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                     binding.tbMain.navigationIcon = null
                     binding.tbMain.setNavigationOnClickListener(null)
                 }
-
             }
         }
     }

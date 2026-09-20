@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvScore"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintEnd_toStartOf="@id/cvPenalties"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small">
+
+            <TextView
+                android:id="@+id/tvScoreTitle"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="@string/game_score_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tvScore"
+                style="@style/Widget.BugsGame.TextView.Title"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvScoreTitle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvPenalties"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cvScore"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small">
+
+            <TextView
+                android:id="@+id/tvPenaltyTitle"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:text="@string/game_penalty_title"
+                android:gravity="start"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tvPenalties"
+                style="@style/Widget.BugsGame.TextView.Title"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvPenaltyTitle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.kxnst.bugsgame.presentation.game.GameBoardView
+        android:id="@+id/gbvGame"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="@dimen/size_zero"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:importantForAccessibility="yes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvPenalties" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
