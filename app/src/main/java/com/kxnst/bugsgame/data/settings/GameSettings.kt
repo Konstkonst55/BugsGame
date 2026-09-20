@@ -13,8 +13,8 @@ object GameSettingConstraints {
     const val defaultSpeed = 5
 
     const val minMaxCockroaches = 1
-    const val maxMaxCockroaches = 20
-    const val defaultMaxCockroaches = 5
+    const val maxMaxCockroaches = 10
+    const val defaultMaxCockroaches = 3
 
     const val minBonusIntervalSeconds = 5
     const val maxBonusIntervalSeconds = 60
