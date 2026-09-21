@@ -6,7 +6,6 @@ import android.os.Bundle
 
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -105,15 +104,14 @@ class MainActivity : AppCompatActivity() {
             isGame && !isFullscreen
 
         if (isSettings) {
-            binding.tbMain.navigationIcon = AppCompatResources.getDrawable(
-                this,
-                androidx.appcompat.R.drawable.abc_ic_ab_back_material
-            )
+            binding.tbMain.setNavigationIcon(R.drawable.ic_arrow_back)
+            binding.tbMain.setNavigationContentDescription(R.string.toolbar_back)
             binding.tbMain.setNavigationOnClickListener {
                 controller.navigateUp()
             }
         } else {
             binding.tbMain.navigationIcon = null
+            binding.tbMain.navigationContentDescription = null
             binding.tbMain.setNavigationOnClickListener(null)
         }
 
