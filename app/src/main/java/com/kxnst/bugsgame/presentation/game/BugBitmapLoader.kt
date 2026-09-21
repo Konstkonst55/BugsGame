@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import androidx.appcompat.content.res.AppCompatResources
 import com.kxnst.bugsgame.R
+import androidx.core.graphics.createBitmap
 
 class BugBitmapLoader(
     private val context: Context
@@ -21,7 +22,7 @@ class BugBitmapLoader(
 
         val width = drawable.intrinsicWidth.coerceAtLeast(MIN_BITMAP_SIZE)
         val height = drawable.intrinsicHeight.coerceAtLeast(MIN_BITMAP_SIZE)
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(width, height)
         val canvas = Canvas(bitmap)
 
         drawable.setBounds(0, 0, width, height)
