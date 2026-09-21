@@ -2,17 +2,22 @@ package com.kxnst.bugsgame.presentation.home
 
 import android.os.Bundle
 import android.view.View
+
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.databinding.FragmentHomeBinding
 import com.kxnst.bugsgame.presentation.register.PlayerViewModel
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 import kotlinx.coroutines.launch
+
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -23,6 +28,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         _binding = FragmentHomeBinding.bind(view)
         observeState()
     }
@@ -45,15 +51,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         birthDate.format(dateFormatter)
                     )
                     binding.tvZodiacName.text = registration.zodiacName
-                    val zodiac = state.zodiac
-                    if (zodiac != null) {
-                        val resourceId = requireContext().resources.getIdentifier(
-                            zodiac.iconResourceName,
-                            "drawable",
-                            requireContext().packageName
-                        ).takeIf { it != 0 } ?: R.drawable.ic_zodiac_placeholder
-                        binding.ivZodiac.setImageResource(resourceId)
-                        binding.ivZodiac.contentDescription = getString(R.string.home_cd_zodiac, zodiac.name)
+
+                    state.zodiac?.let { zodiac ->
+                        binding.ivZodiac.setImageResource(
+                            zodiac.iconResourceId.takeIf { it != 0 }
+                                ?: R.drawable.ic_zodiac_placeholder
+                        )
+                        binding.ivZodiac.contentDescription = getString(
+                            R.string.home_cd_zodiac,
+                            zodiac.name
+                        )
                     }
                 }
             }
@@ -62,6 +69,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
     }
 }

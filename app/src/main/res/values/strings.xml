@@ -114,4 +114,5 @@
     <string name="game_result_message">Очки: %1$d\nШтрафы: %2$d\nДлительность: %3$d с</string>
     <string name="game_result_restart">Перезапустить раунд</string>
     <string name="game_result_home">На главную</string>
+    <string name="toolbar_back">Назад</string>
 </resources>

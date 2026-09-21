@@ -3,6 +3,7 @@ package com.kxnst.bugsgame.presentation.register
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -10,11 +11,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.databinding.FragmentRegisterBinding
+
 import java.time.LocalDate
+
 import kotlinx.coroutines.launch
+
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
@@ -35,7 +40,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         binding.actvCourse.setAdapter(
             ArrayAdapter(
                 requireContext(),
-                com.google.android.material.R.layout.mtrl_auto_complete_simple_item,
+                R.layout.item_dropdown,
                 resources.getStringArray(R.array.register_courses)
             )
         )
@@ -80,7 +85,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         }
 
         viewModel.formState.value.birthDate?.let { date ->
-            binding.cvBirthDate.date = date.toEpochDay() * 86_400_000L
+            binding.cvBirthDate.date = date.toEpochDay() * MILLIS_PER_DAY
         } ?: viewModel.updateBirthDate(LocalDate.now())
 
         binding.bSubmit.setOnClickListener { submit() }
@@ -101,14 +106,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                             R.string.home_cd_zodiac,
                             zodiac.name
                         )
-
-                        val resourceId = requireContext().resources.getIdentifier(
-                            zodiac.iconResourceName,
-                            "drawable",
-                            requireContext().packageName
-                        ).takeIf { it != 0 } ?: R.drawable.ic_zodiac_placeholder
-
-                        binding.ivSelectedZodiac.setImageResource(resourceId)
+                        binding.ivSelectedZodiac.setImageResource(
+                            zodiac.iconResourceId.takeIf { it != 0 }
+                                ?: R.drawable.ic_zodiac_placeholder
+                        )
                     }
                 }
             }
@@ -125,7 +126,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
     private fun renderZodiacState(state: ZodiacLoadState) {
         binding.pbZodiac.isVisible = state is ZodiacLoadState.Loading
-        binding.tvZodiacState.isVisible = state is ZodiacLoadState.Empty || state is ZodiacLoadState.Error
+        binding.tvZodiacState.isVisible =
+            state is ZodiacLoadState.Empty || state is ZodiacLoadState.Error
 
         when (state) {
             ZodiacLoadState.Loading -> Unit
@@ -184,5 +186,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         super.onDestroyView()
 
         _binding = null
+    }
+
+    private companion object {
+        const val MILLIS_PER_DAY = 86_400_000L
     }
 }
