@@ -5,11 +5,11 @@ import java.time.MonthDay
 class ZodiacSign(
     val name: String,
     val contentDescription: String,
-    val iconResourceName: String,
-    private val monthStart: Int,
-    private val dayStart: Int,
-    private val monthEnd: Int,
-    private val dayEnd: Int
+    val iconResourceId: Int,
+    monthStart: Int,
+    dayStart: Int,
+    monthEnd: Int,
+    dayEnd: Int
 ) {
     private val start: MonthDay = MonthDay.of(monthStart, dayStart)
     private val end: MonthDay = MonthDay.of(monthEnd, dayEnd)
