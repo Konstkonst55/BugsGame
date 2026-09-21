@@ -3,7 +3,7 @@
     <sign
         name="@string/zodiac_aries_name"
         contentDescription="@string/zodiac_aries_cd"
-        icon="ic_zodiac_aries"
+        icon="@drawable/ic_zodiac_aries"
         monthStart="3"
         dayStart="21"
         monthEnd="4"
@@ -11,7 +11,7 @@
     <sign
         name="@string/zodiac_taurus_name"
         contentDescription="@string/zodiac_taurus_cd"
-        icon="ic_zodiac_taurus"
+        icon="@drawable/ic_zodiac_taurus"
         monthStart="4"
         dayStart="20"
         monthEnd="5"
@@ -19,7 +19,7 @@
     <sign
         name="@string/zodiac_gemini_name"
         contentDescription="@string/zodiac_gemini_cd"
-        icon="ic_zodiac_gemini"
+        icon="@drawable/ic_zodiac_gemini"
         monthStart="5"
         dayStart="21"
         monthEnd="6"
@@ -27,7 +27,7 @@
     <sign
         name="@string/zodiac_cancer_name"
         contentDescription="@string/zodiac_cancer_cd"
-        icon="ic_zodiac_cancer"
+        icon="@drawable/ic_zodiac_cancer"
         monthStart="6"
         dayStart="21"
         monthEnd="7"
@@ -35,7 +35,7 @@
     <sign
         name="@string/zodiac_leo_name"
         contentDescription="@string/zodiac_leo_cd"
-        icon="ic_zodiac_leo"
+        icon="@drawable/ic_zodiac_leo"
         monthStart="7"
         dayStart="23"
         monthEnd="8"
@@ -43,7 +43,7 @@
     <sign
         name="@string/zodiac_virgo_name"
         contentDescription="@string/zodiac_virgo_cd"
-        icon="ic_zodiac_virgo"
+        icon="@drawable/ic_zodiac_virgo"
         monthStart="8"
         dayStart="23"
         monthEnd="9"
@@ -51,7 +51,7 @@
     <sign
         name="@string/zodiac_libra_name"
         contentDescription="@string/zodiac_libra_cd"
-        icon="ic_zodiac_libra"
+        icon="@drawable/ic_zodiac_libra"
         monthStart="9"
         dayStart="23"
         monthEnd="10"
@@ -59,7 +59,7 @@
     <sign
         name="@string/zodiac_scorpio_name"
         contentDescription="@string/zodiac_scorpio_cd"
-        icon="ic_zodiac_scorpio"
+        icon="@drawable/ic_zodiac_scorpio"
         monthStart="10"
         dayStart="23"
         monthEnd="11"
@@ -67,7 +67,7 @@
     <sign
         name="@string/zodiac_sagittarius_name"
         contentDescription="@string/zodiac_sagittarius_cd"
-        icon="ic_zodiac_sagittarius"
+        icon="@drawable/ic_zodiac_sagittarius"
         monthStart="11"
         dayStart="22"
         monthEnd="12"
@@ -75,7 +75,7 @@
     <sign
         name="@string/zodiac_capricorn_name"
         contentDescription="@string/zodiac_capricorn_cd"
-        icon="ic_zodiac_capricorn"
+        icon="@drawable/ic_zodiac_capricorn"
         monthStart="12"
         dayStart="22"
         monthEnd="1"
@@ -83,7 +83,7 @@
     <sign
         name="@string/zodiac_aquarius_name"
         contentDescription="@string/zodiac_aquarius_cd"
-        icon="ic_zodiac_aquarius"
+        icon="@drawable/ic_zodiac_aquarius"
         monthStart="1"
         dayStart="20"
         monthEnd="2"
@@ -91,7 +91,7 @@
     <sign
         name="@string/zodiac_pisces_name"
         contentDescription="@string/zodiac_pisces_cd"
-        icon="ic_zodiac_pisces"
+        icon="@drawable/ic_zodiac_pisces"
         monthStart="2"
         dayStart="19"
         monthEnd="3"
