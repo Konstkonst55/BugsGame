@@ -1,6 +1,7 @@
 package com.kxnst.bugsgame.presentation.game
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
@@ -10,6 +11,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+
 import androidx.core.content.ContextCompat
 
 import com.kxnst.bugsgame.R
@@ -28,6 +30,8 @@ class GameBoardView @JvmOverloads constructor(
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
     private val bitmapLoader = BugBitmapLoader(context)
     private val bitmaps = BugType.entries.associateWith(bitmapLoader::load)
+    private val destination = RectF()
+    private val outlineDestination = RectF()
     private var gameState = GameState()
     private var downX = 0f
     private var downY = 0f
@@ -52,13 +56,12 @@ class GameBoardView @JvmOverloads constructor(
             val bitmap = bitmaps.getValue(bug.type)
             val centerX = bug.x * width
             val centerY = bug.y * height
-            val left = centerX - bugSize / 2f
-            val top = centerY - bugSize / 2f
-            val destination = RectF(
-                left,
-                top,
-                left + bugSize,
-                top + bugSize
+
+            destination.set(
+                centerX - bugSize / 2f,
+                centerY - bugSize / 2f,
+                centerX + bugSize / 2f,
+                centerY + bugSize / 2f
             )
 
             drawOutline(canvas, bitmap, destination, outlineOffset)
@@ -68,24 +71,28 @@ class GameBoardView @JvmOverloads constructor(
 
     private fun drawOutline(
         canvas: Canvas,
-        bitmap: android.graphics.Bitmap,
+        bitmap: Bitmap,
         destination: RectF,
         offset: Float
     ) {
-        val offsets = arrayOf(
-            -offset to -offset,
-            0f to -offset,
-            offset to -offset,
-            -offset to 0f,
-            offset to 0f,
-            -offset to offset,
-            0f to offset,
-            offset to offset
-        )
-
-        offsets.forEach { (x, y) ->
-            canvas.drawBitmap(bitmap, null, RectF(destination).apply { offset(x, y) }, outlinePaint)
+        val offsets = listOf(-offset, 0f, offset)
+        for (dx in offsets) for (dy in offsets) {
+            if (dx != 0f || dy != 0f) {
+                drawOutlineBitmap(canvas, bitmap, destination, dx, dy)
+            }
         }
+    }
+
+    private fun drawOutlineBitmap(
+        canvas: Canvas,
+        bitmap: Bitmap,
+        destination: RectF,
+        offsetX: Float,
+        offsetY: Float
+    ) {
+        outlineDestination.set(destination)
+        outlineDestination.offset(offsetX, offsetY)
+        canvas.drawBitmap(bitmap, null, outlineDestination, outlinePaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

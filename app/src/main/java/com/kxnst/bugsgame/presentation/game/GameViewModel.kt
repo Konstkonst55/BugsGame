@@ -108,11 +108,6 @@ class GameViewModel(
         )
     }
 
-    override fun onCleared() {
-        pauseGame()
-        super.onCleared()
-    }
-
     private fun startGameLoop() {
         if (gameJob?.isActive == true) {
             return
@@ -227,20 +222,20 @@ class GameViewModel(
         val angle = random.nextDouble(0.0, PI * 2)
         val directionX = cos(angle).toFloat()
         val directionY = sin(angle).toFloat()
-        val minimumCoordinate = BUG_HALF_SIZE
-        val maximumCoordinate = 1f - BUG_HALF_SIZE
-
         return GameBug(
             id = nextBugId++,
             type = type,
-            x = randomCoordinate(minimumCoordinate, maximumCoordinate),
-            y = randomCoordinate(minimumCoordinate, maximumCoordinate),
+            x = randomCoordinate(),
+            y = randomCoordinate(),
             velocityX = directionX,
             velocityY = directionY * 0.8f
         )
     }
 
-    private fun randomCoordinate(minimum: Float, maximum: Float): Float {
+    private fun randomCoordinate(): Float {
+        val minimum = BUG_HALF_SIZE
+        val maximum = 1f - BUG_HALF_SIZE
+
         return minimum + random.nextFloat() * (maximum - minimum)
     }
 
