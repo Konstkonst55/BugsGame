@@ -64,8 +64,8 @@
     <string name="rules_html_content"><![CDATA[
         <h2>Игра «Жуки»</h2>
         <p>На игровом поле появляются насекомые. Ваша задача - как можно быстрее уничтожать их нажатием на изображение.</p>
-        <p><b>Попадание</b> приносит очки, а <b>промах</b> уменьшает результат.</p>
-        <p>Следите за настройками игры и старайтесь набрать максимальное количество очков за раунд.</p>
+        <p><b>Попадание</b> приносит очки, а <b>промах</b> увеличивает количество штрафов.</p>
+        <p>Следите за оставшимся временем и старайтесь набрать максимальное количество очков за раунд.</p>
     ]]></string>
 
     <string name="authors_title">Авторы</string>
@@ -85,15 +85,33 @@
 
     <string name="toolbar_settings">Настройки</string>
     <string name="menu_home">Главная</string>
+    <string name="menu_game">Игра</string>
     <string name="menu_rules">Правила</string>
     <string name="menu_authors">Авторы</string>
 
     <string name="game_title">Игра</string>
-    <string name="game_score_title">Очки</string>
     <string name="game_score_value">%1$d</string>
-    <string name="game_penalty_title">Штрафы</string>
     <string name="game_penalty_value">%1$d</string>
-    <string name="game_instruction">Нажимайте на жуков, чтобы заработать очки. Промахи увеличивают штраф.</string>
+    <string name="game_timer_value">%1$d:%2$02d</string>
+    <string name="game_timer_cd_icon">Оставшееся время</string>
+    <string name="game_score_cd_icon">Очки</string>
+    <string name="game_penalty_cd_icon">Штрафы</string>
+    <string name="game_score_cd">Очки: %1$d</string>
+    <string name="game_penalty_cd">Штрафы: %1$d</string>
+    <string name="game_timer_cd">Оставшееся время: %1$d:%2$02d</string>
     <string name="game_cd_board">Игровое поле. Нажимайте на движущихся жуков.</string>
-    <string name="menu_game">Игра</string>
+    <string name="game_cd_enter_fullscreen">Открыть игру в полноэкранном режиме</string>
+    <string name="game_cd_exit_fullscreen">Выйти из полноэкранного режима</string>
+    <string name="game_toolbar_restart">Перезапустить игру</string>
+    <string name="game_start_title">Готовы начать игру?</string>
+    <string name="game_start_button">Старт</string>
+    <string name="game_rules_button">Правила</string>
+    <string name="game_restart_title">Перезапустить игру?</string>
+    <string name="game_restart_message">Текущий раунд будет приостановлен.</string>
+    <string name="game_yes">Да</string>
+    <string name="game_no">Нет</string>
+    <string name="game_result_title">Раунд завершён</string>
+    <string name="game_result_message">Очки: %1$d\nШтрафы: %2$d\nДлительность: %3$d с</string>
+    <string name="game_result_restart">Перезапустить раунд</string>
+    <string name="game_result_home">На главную</string>
 </resources>

@@ -8,4 +8,10 @@
         android:title="@string/toolbar_settings"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_toolbar_restart"
+        android:icon="@drawable/ic_toolbar_restart"
+        android:title="@string/game_toolbar_restart"
+        app:showAsAction="always" />
+
 </menu>

@@ -44,4 +44,8 @@
         android:id="@+id/action_global_settings"
         app:destination="@id/settingsFragment" />
 
+    <action
+        android:id="@+id/action_global_rules"
+        app:destination="@id/rulesFragment" />
+
 </navigation>
