@@ -3,6 +3,8 @@ package com.kxnst.bugsgame.presentation.game
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -17,6 +19,12 @@ class GameBoardView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : View(context, attrs) {
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val outlinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(context, R.color.primary),
+            PorterDuff.Mode.SRC_IN
+        )
+    }
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
     private val bitmapLoader = BugBitmapLoader(context)
     private val bitmaps = BugType.entries.associateWith(bitmapLoader::load)
@@ -38,6 +46,7 @@ class GameBoardView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         val bugSize = minOf(width, height) * BUG_SIZE_RATIO
+        val outlineOffset = (bugSize * OUTLINE_RATIO).coerceAtLeast(MIN_OUTLINE_OFFSET)
 
         gameState.bugs.forEach { bug ->
             val bitmap = bitmaps.getValue(bug.type)
@@ -52,7 +61,30 @@ class GameBoardView @JvmOverloads constructor(
                 top + bugSize
             )
 
+            drawOutline(canvas, bitmap, destination, outlineOffset)
             canvas.drawBitmap(bitmap, null, destination, paint)
+        }
+    }
+
+    private fun drawOutline(
+        canvas: Canvas,
+        bitmap: android.graphics.Bitmap,
+        destination: RectF,
+        offset: Float
+    ) {
+        val offsets = arrayOf(
+            -offset to -offset,
+            0f to -offset,
+            offset to -offset,
+            -offset to 0f,
+            offset to 0f,
+            -offset to offset,
+            0f to offset,
+            offset to offset
+        )
+
+        offsets.forEach { (x, y) ->
+            canvas.drawBitmap(bitmap, null, RectF(destination).apply { offset(x, y) }, outlinePaint)
         }
     }
 
@@ -94,5 +126,7 @@ class GameBoardView @JvmOverloads constructor(
 
     private companion object {
         const val BUG_SIZE_RATIO = 0.14f
+        const val OUTLINE_RATIO = 0.018f
+        const val MIN_OUTLINE_OFFSET = 1f
     }
 }
