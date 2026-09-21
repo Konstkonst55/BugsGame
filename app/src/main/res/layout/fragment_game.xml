@@ -19,16 +19,16 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_small">
 
-            <TextView
-                android:id="@+id/tvScoreTitle"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:text="@string/game_score_title"
-                app:layout_constraintTop_toTopOf="parent"
+            <ImageView
+                android:id="@+id/ivScore"
+                android:layout_width="@dimen/size_medium"
+                android:layout_height="@dimen/size_medium"
+                android:contentDescription="@string/game_score_cd_icon"
+                app:tint="@color/onSecondaryContainer"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_game_score" />
 
             <TextView
                 android:id="@+id/tvScore"
@@ -36,10 +36,11 @@
                 android:layout_width="@dimen/size_zero"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:layout_marginStart="@dimen/margin_small"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvScoreTitle"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toEndOf="@id/ivScore"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -50,7 +51,8 @@
         android:layout_width="@dimen/size_zero"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintEnd_toStartOf="@id/cvTimer"
         app:layout_constraintStart_toEndOf="@id/cvScore"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -59,16 +61,16 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_small">
 
-            <TextView
-                android:id="@+id/tvPenaltyTitle"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:text="@string/game_penalty_title"
-                android:gravity="start"
-                app:layout_constraintTop_toTopOf="parent"
+            <ImageView
+                android:id="@+id/ivPenalty"
+                android:layout_width="@dimen/size_medium"
+                android:layout_height="@dimen/size_medium"
+                android:contentDescription="@string/game_penalty_cd_icon"
+                app:tint="@color/onSecondaryContainer"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_game_penalty" />
 
             <TextView
                 android:id="@+id/tvPenalties"
@@ -76,10 +78,52 @@
                 android:layout_width="@dimen/size_zero"
                 android:layout_height="wrap_content"
                 android:gravity="end"
+                android:layout_marginStart="@dimen/margin_small"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvPenaltyTitle"
+                app:layout_constraintStart_toEndOf="@id/ivPenalty"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cvTimer"
+        android:layout_width="@dimen/size_zero"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cvPenalties"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small">
+
+            <ImageView
+                android:id="@+id/ivTimer"
+                android:layout_width="@dimen/size_medium"
+                android:layout_height="@dimen/size_medium"
+                android:contentDescription="@string/game_timer_cd_icon"
+                app:tint="@color/onSecondaryContainer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:srcCompat="@drawable/ic_game_timer" />
+
+            <TextView
+                android:id="@+id/tvTimer"
+                style="@style/Widget.BugsGame.TextView.Title"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginStart="@dimen/margin_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivTimer"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -94,6 +138,91 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cvPenalties" />
+        app:layout_constraintTop_toBottomOf="@id/cvScore" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clFullscreenHud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_tiny"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/gbvGame"
+        app:layout_constraintTop_toTopOf="@id/gbvGame">
+
+        <ImageView
+            android:id="@+id/ivFullscreenScore"
+            android:layout_width="@dimen/size_small"
+            android:layout_height="@dimen/size_small"
+            android:contentDescription="@string/game_score_cd_icon"
+            app:tint="@color/onSurface"
+            app:srcCompat="@drawable/ic_game_score"
+            app:layout_constraintBottom_toBottomOf="@id/tvFullscreenScore"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvFullscreenScore" />
+
+        <TextView
+            android:id="@+id/tvFullscreenScore"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            app:layout_constraintStart_toEndOf="@id/ivFullscreenScore"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivFullscreenPenalties"
+            android:layout_width="@dimen/size_small"
+            android:layout_height="@dimen/size_small"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:contentDescription="@string/game_penalty_cd_icon"
+            app:tint="@color/onSurface"
+            app:srcCompat="@drawable/ic_game_penalty"
+            app:layout_constraintBottom_toBottomOf="@id/tvFullscreenPenalties"
+            app:layout_constraintStart_toEndOf="@id/tvFullscreenScore"
+            app:layout_constraintTop_toTopOf="@id/tvFullscreenPenalties" />
+
+        <TextView
+            android:id="@+id/tvFullscreenPenalties"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            app:layout_constraintStart_toEndOf="@id/ivFullscreenPenalties"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivFullscreenTimer"
+            android:layout_width="@dimen/size_small"
+            android:layout_height="@dimen/size_small"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:contentDescription="@string/game_timer_cd_icon"
+            app:tint="@color/onSurface"
+            app:srcCompat="@drawable/ic_game_timer"
+            app:layout_constraintBottom_toBottomOf="@id/tvFullscreenTimer"
+            app:layout_constraintStart_toEndOf="@id/tvFullscreenPenalties"
+            app:layout_constraintTop_toTopOf="@id/tvFullscreenTimer" />
+
+        <TextView
+            android:id="@+id/tvFullscreenTimer"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_micro"
+            app:layout_constraintStart_toEndOf="@id/ivFullscreenTimer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ibFullscreen"
+        android:layout_width="@dimen/size_xlarge"
+        android:layout_height="@dimen/size_xlarge"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/game_cd_enter_fullscreen"
+        android:padding="@dimen/padding_small"
+        app:tint="@color/onSecondaryContainer"
+        app:layout_constraintEnd_toEndOf="@id/gbvGame"
+        app:layout_constraintTop_toTopOf="@id/gbvGame"
+        app:srcCompat="@drawable/ic_game_fullscreen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
