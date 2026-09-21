@@ -3,6 +3,7 @@ package com.kxnst.bugsgame.presentation.settings
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,7 @@ import com.kxnst.bugsgame.data.settings.GameSettingConstraints
 import com.kxnst.bugsgame.databinding.FragmentSettingsBinding
 
 import kotlinx.coroutines.launch
+
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
@@ -34,22 +36,25 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun setupDropdowns() {
         setupDropdown(
             binding.actvSpeed,
-            GameSettingConstraints.minSpeed..GameSettingConstraints.maxSpeed
+            GameSettingConstraints.MIN_SPEED..GameSettingConstraints.MAX_SPEED
         ) { viewModel.updateSpeed(it) }
 
         setupDropdown(
             binding.actvMaxCockroaches,
-            GameSettingConstraints.minMaxCockroaches..GameSettingConstraints.maxMaxCockroaches
+            GameSettingConstraints.MIN_MAX_COCKROACHES..
+                GameSettingConstraints.MAX_MAX_COCKROACHES
         ) { viewModel.updateMaxCockroaches(it) }
 
         setupDropdown(
             binding.actvBonusInterval,
-            GameSettingConstraints.minBonusIntervalSeconds..GameSettingConstraints.maxBonusIntervalSeconds
+            GameSettingConstraints.MIN_BONUS_INTERVAL_SECONDS..
+                GameSettingConstraints.MAX_BONUS_INTERVAL_SECONDS
         ) { viewModel.updateBonusIntervalSeconds(it) }
 
         setupDropdown(
             binding.actvRoundDuration,
-            GameSettingConstraints.minRoundDurationSeconds..GameSettingConstraints.maxRoundDurationSeconds
+            GameSettingConstraints.MIN_ROUND_DURATION_SECONDS..
+                GameSettingConstraints.MAX_ROUND_DURATION_SECONDS
         ) { viewModel.updateRoundDurationSeconds(it) }
     }
 
@@ -61,7 +66,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         view.setAdapter(
             ArrayAdapter(
                 requireContext(),
-                com.google.android.material.R.layout.mtrl_auto_complete_simple_item,
+                R.layout.item_dropdown,
                 range.map { it.toString() }
             )
         )
@@ -80,9 +85,18 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                     isUpdatingFromState = true
 
                     binding.actvSpeed.setText(settings.speed.toString(), false)
-                    binding.actvMaxCockroaches.setText(settings.maxCockroaches.toString(), false)
-                    binding.actvBonusInterval.setText(settings.bonusIntervalSeconds.toString(), false)
-                    binding.actvRoundDuration.setText(settings.roundDurationSeconds.toString(), false)
+                    binding.actvMaxCockroaches.setText(
+                        settings.maxCockroaches.toString(),
+                        false
+                    )
+                    binding.actvBonusInterval.setText(
+                        settings.bonusIntervalSeconds.toString(),
+                        false
+                    )
+                    binding.actvRoundDuration.setText(
+                        settings.roundDurationSeconds.toString(),
+                        false
+                    )
 
                     isUpdatingFromState = false
                 }
