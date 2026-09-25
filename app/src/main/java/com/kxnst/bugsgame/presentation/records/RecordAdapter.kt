@@ -16,12 +16,16 @@ class RecordAdapter : ListAdapter<UserProfile, RecordAdapter.RecordViewHolder>(D
     private var currentUserName: String? = null
 
     fun setCurrentUser(name: String?) {
-        if (currentUserName == name) {
-            return
-        }
+        if (currentUserName == name) return
 
+        val oldName = currentUserName
         currentUserName = name
-        notifyDataSetChanged()
+
+        val oldPos = currentList.indexOfFirst { it.name == oldName }
+        val newPos = currentList.indexOfFirst { it.name == name }
+
+        if (oldPos >= 0) notifyItemChanged(oldPos)
+        if (newPos >= 0) notifyItemChanged(newPos)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
