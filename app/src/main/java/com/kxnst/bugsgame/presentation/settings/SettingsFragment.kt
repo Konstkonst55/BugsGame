@@ -8,20 +8,30 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.data.settings.GameSettingConstraints
 import com.kxnst.bugsgame.databinding.FragmentSettingsBinding
+import com.kxnst.bugsgame.presentation.navigation.navigateToHome
+import com.kxnst.bugsgame.presentation.register.PlayerViewModel
+import com.kxnst.bugsgame.presentation.user.UserDialogHelper
+import com.kxnst.bugsgame.presentation.user.UserListState
+import com.kxnst.bugsgame.presentation.user.UserSessionViewModel
 
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: GameSettingsViewModel by viewModel()
+    private val userSessionViewModel: UserSessionViewModel by activityViewModel()
+    private val playerViewModel: PlayerViewModel by activityViewModel()
     private var isUpdatingFromState = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,6 +40,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         _binding = FragmentSettingsBinding.bind(view)
 
         setupDropdowns()
+        setupUserSwitch()
         observeSettings()
     }
 
@@ -56,6 +67,45 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             GameSettingConstraints.MIN_ROUND_DURATION_SECONDS..
                 GameSettingConstraints.MAX_ROUND_DURATION_SECONDS
         ) { viewModel.updateRoundDurationSeconds(it) }
+    }
+
+    private fun setupUserSwitch() {
+        binding.bChangeUser.setOnClickListener {
+            UserDialogHelper.showUserChoiceDialog(
+                fragment = this,
+                onRegisterNew = {
+                    playerViewModel.resetForm()
+                    findNavController().navigate(R.id.registerFragment)
+                },
+                onSelectExisting = {
+                    showUserSelection()
+                }
+            )
+        }
+    }
+
+    private fun showUserSelection() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val state = userSessionViewModel.usersState.first { it !is UserListState.Loading }) {
+                UserListState.Empty -> {
+                    UserDialogHelper.showUserSelectionDialog(this@SettingsFragment, emptyList()) { }
+                }
+
+                is UserListState.Error -> {
+                    UserDialogHelper.showUserSelectionDialog(this@SettingsFragment, emptyList()) { }
+                }
+
+                is UserListState.Content -> {
+                    UserDialogHelper.showUserSelectionDialog(this@SettingsFragment, state.users) { user ->
+                        playerViewModel.loadUser(user)
+                        userSessionViewModel.setCurrentUser(user)
+                        findNavController().navigateToHome()
+                    }
+                }
+
+                UserListState.Loading -> Unit
+            }
+        }
     }
 
     private fun setupDropdown(
@@ -105,8 +155,8 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-
         _binding = null
+
+        super.onDestroyView()
     }
 }
