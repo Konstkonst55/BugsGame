@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.kxnst.bugsgame.MainActivity
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.databinding.FragmentGameBinding
-import com.kxnst.bugsgame.domain.user.UserProfile
 import com.kxnst.bugsgame.presentation.user.UserSessionViewModel
 
 import kotlinx.coroutines.launch
