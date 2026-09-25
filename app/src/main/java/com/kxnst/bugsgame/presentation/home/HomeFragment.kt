@@ -46,29 +46,32 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             return@collect
                         }
 
-                        binding.tvFullName.text = getString(
-                            R.string.home_text_full_name,
-                            user.name
-                        )
-                        binding.tvGender.text = getString(
-                            R.string.home_text_gender,
-                            user.gender
-                        )
-                        binding.tvCourse.text = getString(
-                            R.string.home_text_course,
-                            user.course
-                        )
+                        binding.tvFullName.text = user.name
+                        binding.tvBirthDate.text = LocalDate.parse(user.birthDate).format(dateFormatter)
+                        binding.tvCourse.text = user.course
+
+                        val stars = "⭐".repeat(user.difficulty.coerceIn(1, 3))
                         binding.tvDifficulty.text = getString(
-                            R.string.home_text_difficulty,
-                            user.difficulty
+                            R.string.home_difficulty_value,
+                            stars
                         )
 
-                        val birthDate = LocalDate.parse(user.birthDate)
-                        binding.tvBirthDate.text = getString(
-                            R.string.home_text_birth_date,
-                            birthDate.format(dateFormatter)
+                        binding.tvBestScore.text = user.bestScore.toString()
+                        binding.tvBestScore.contentDescription = getString(
+                            R.string.home_cd_best_score,
+                            user.bestScore
                         )
-                        binding.tvZodiacName.text = user.zodiacName
+
+                        val isMale = user.gender == getString(R.string.register_gender_male)
+                        binding.ivGender.setImageResource(
+                            if (isMale) R.drawable.ic_man else R.drawable.ic_woman
+                        )
+                        binding.ivGender.contentDescription = getString(
+                            if (isMale) R.string.home_cd_gender_male else R.string.home_cd_gender_female
+                        )
+                        binding.flGender.setBackgroundResource(
+                            if (isMale) R.drawable.bg_gender_male else R.drawable.bg_gender_female
+                        )
                     }
                 }
 
@@ -76,13 +79,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     playerViewModel.formState.collect { state ->
                         state.zodiac?.let { zodiac ->
                             binding.ivZodiac.setImageResource(
-                                zodiac.iconResourceId.takeIf { it != 0 }
-                                    ?: R.drawable.ic_zodiac_placeholder
+                                zodiac.iconResourceId.takeIf { it != 0 } ?: R.drawable.ic_zodiac_placeholder
                             )
                             binding.ivZodiac.contentDescription = getString(
                                 R.string.home_cd_zodiac,
                                 zodiac.name
                             )
+                            binding.tvZodiacName.text = zodiac.name
                         }
                     }
                 }

@@ -10,6 +10,7 @@
     <dimen name="size_large">36dp</dimen>
     <dimen name="size_xlarge">48dp</dimen>
     <dimen name="size_xxlarge">96dp</dimen>
+    <dimen name="size_gender_badge">16dp</dimen>
 
     <dimen name="bias_start">0.0</dimen>
     <dimen name="bias_end">1.0</dimen>
@@ -21,6 +22,7 @@
     <dimen name="radius_small">9dp</dimen>
     <dimen name="radius_medium">12dp</dimen>
     <dimen name="radius_large">16dp</dimen>
+    <dimen name="radius_gender_badge">4dp</dimen>
 
     <dimen name="margin_micro">6dp</dimen>
     <dimen name="margin_small">12dp</dimen>

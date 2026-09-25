@@ -34,6 +34,11 @@
     <string name="home_text_birth_date">Дата рождения: %1$s</string>
     <string name="home_title_zodiac">Ваш знак зодиака</string>
     <string name="home_cd_zodiac">Знак зодиака %1$s</string>
+    <string name="home_difficulty_value">Сложность %1$s</string>
+    <string name="home_cd_gender_male">Мужской пол</string>
+    <string name="home_cd_gender_female">Женский пол</string>
+    <string name="home_cd_best_score">Лучший счёт: %1$d</string>
+    <string name="home_empty_user">Пользователь не выбран</string>
 
     <string name="zodiac_aries_name">Овен</string>
     <string name="zodiac_taurus_name">Телец</string>

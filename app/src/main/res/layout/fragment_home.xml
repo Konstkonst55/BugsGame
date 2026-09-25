@@ -1,112 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/svHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/padding_medium">
+    android:fillViewport="true">
 
-    <ScrollView
-        android:id="@+id/svHome"
-        android:layout_width="@dimen/size_zero"
-        android:layout_height="@dimen/size_zero"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvZodiac"
+            android:layout_width="@dimen/size_xxlarge"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/surfaceContainer"
+            app:cardCornerRadius="@dimen/radius_medium"
+            app:cardElevation="@dimen/size_zero"
+            app:strokeWidth="@dimen/size_zero"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_small">
+
+                <ImageView
+                    android:id="@+id/ivZodiac"
+                    android:layout_width="@dimen/size_xlarge"
+                    android:layout_height="@dimen/size_xlarge"
+                    android:contentDescription="@string/home_cd_zodiac"
+                    android:importantForAccessibility="yes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/onSecondaryContainer"
+                    tools:src="@drawable/ic_zodiac_aries" />
+
+                <TextView
+                    android:id="@+id/tvZodiacName"
+                    android:layout_width="@dimen/size_zero"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/raleway"
+                    android:gravity="center"
+                    android:maxLines="@integer/max_lines_zodiac"
+                    android:textColor="@color/onSecondaryContainer"
+                    android:textFontWeight="@integer/font_black"
+                    android:textSize="@dimen/text_label_large"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ivZodiac"
+                    tools:text="Телец" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cvBestScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/surface"
+            app:cardCornerRadius="@dimen/radius_medium"
+            app:cardElevation="@dimen/size_zero"
+            app:strokeColor="@color/primary"
+            app:strokeWidth="@dimen/stroke_button_default"
+            app:layout_constraintBottom_toBottomOf="@id/cvZodiac"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cvZodiac">
 
             <TextView
-                android:id="@+id/tvFullName"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
+                android:id="@+id/tvBestScore"
+                style="@style/Widget.BugsGame.TextView.Title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:fontFamily="@font/raleway"
+                android:gravity="center"
+                android:minWidth="@dimen/size_medium"
+                android:padding="@dimen/padding_tiny"
+                android:textColor="@color/onSecondaryContainer"
+                android:textFontWeight="@integer/font_black"
+                android:textSize="@dimen/text_title_medium"
+                tools:text="12" />
+        </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/tvGender"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvFullName" />
+        <TextView
+            android:id="@+id/tvFullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/raleway"
+            android:gravity="center_vertical"
+            android:maxLines="@integer/max_lines_name"
+            android:textColor="@color/onSecondaryContainer"
+            android:textFontWeight="@integer/font_bold"
+            android:textSize="@dimen/text_label_large"
+            android:layout_marginStart="@dimen/margin_medium"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/flGender"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/cvZodiac"
+            app:layout_constraintTop_toTopOf="@id/cvZodiac"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="kxnst" />
 
-            <TextView
-                android:id="@+id/tvCourse"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvGender" />
-
-            <TextView
-                android:id="@+id/tvDifficulty"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvCourse" />
-
-            <TextView
-                android:id="@+id/tvBirthDate"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvDifficulty" />
+        <FrameLayout
+            android:id="@+id/flGender"
+            android:layout_width="@dimen/size_gender_badge"
+            android:layout_height="@dimen/size_gender_badge"
+            android:layout_marginStart="@dimen/margin_micro"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/cvBestScore"
+            app:layout_constraintStart_toEndOf="@id/tvFullName"
+            app:layout_constraintTop_toTopOf="@id/tvFullName"
+            app:layout_constraintBottom_toBottomOf="@id/tvFullName"
+            tools:background="@drawable/bg_gender_male">
 
             <ImageView
-                android:id="@+id/ivZodiac"
-                android:layout_width="@dimen/size_xxlarge"
-                android:layout_height="@dimen/size_xxlarge"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:contentDescription="@string/zodiac_unknown_cd"
+                android:id="@+id/ivGender"
+                android:layout_width="@dimen/size_small"
+                android:layout_height="@dimen/size_small"
+                android:layout_gravity="center"
+                android:contentDescription="@string/home_cd_gender_male"
                 android:importantForAccessibility="yes"
-                app:tint="@color/onSecondaryContainer"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvBirthDate" />
+                tools:src="@drawable/ic_man" />
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/tvZodiacName"
-                style="@style/Widget.BugsGame.TextView.Title"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:gravity="center"
-                android:fontFamily="@font/raleway"
-                android:textSize="@dimen/text_title_medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivZodiac" />
+        <TextView
+            android:id="@+id/tvBirthDate"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="@dimen/size_zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_micro"
+            android:ellipsize="end"
+            android:maxLines="@integer/max_lines_info"
+            android:textFontWeight="@integer/font_light"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/cvBestScore"
+            app:layout_constraintStart_toEndOf="@id/cvZodiac"
+            app:layout_constraintTop_toBottomOf="@id/tvFullName"
+            app:layout_constraintBottom_toTopOf="@id/tvCourse"
+            tools:text="01.02.2002" />
 
-            <TextView
-                android:id="@+id/tvEmptyHome"
-                style="@style/Widget.BugsGame.TextView"
-                android:layout_width="@dimen/size_zero"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/zodiac_unknown_name"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tvCourse"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="@dimen/size_zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_micro"
+            android:ellipsize="end"
+            android:maxLines="@integer/max_lines_info"
+            android:textFontWeight="@integer/font_light"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/cvBestScore"
+            app:layout_constraintStart_toEndOf="@id/cvZodiac"
+            app:layout_constraintTop_toBottomOf="@id/tvBirthDate"
+            app:layout_constraintBottom_toTopOf="@id/tvDifficulty"
+            tools:text="1 курс" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvDifficulty"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="@dimen/size_zero"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_micro"
+            android:ellipsize="end"
+            android:maxLines="@integer/max_lines_info"
+            android:textFontWeight="@integer/font_light"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintEnd_toStartOf="@id/cvBestScore"
+            app:layout_constraintStart_toEndOf="@id/cvZodiac"
+            app:layout_constraintTop_toBottomOf="@id/tvCourse"
+            tools:text="Сложность ⭐" />
 
-    </ScrollView>
+        <TextView
+            android:id="@+id/tvEmptyHome"
+            style="@style/Widget.BugsGame.TextView"
+            android:layout_width="@dimen/size_zero"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/home_empty_user"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

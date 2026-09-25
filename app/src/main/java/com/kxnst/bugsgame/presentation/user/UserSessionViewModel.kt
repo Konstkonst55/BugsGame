@@ -2,8 +2,10 @@ package com.kxnst.bugsgame.presentation.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.kxnst.bugsgame.data.user.UserRepository
 import com.kxnst.bugsgame.domain.user.UserProfile
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,6 +44,12 @@ class UserSessionViewModel(
                         UserListState.Empty
                     } else {
                         UserListState.Content(users)
+                    }
+
+                    val currentUserName = _currentUser.value?.name
+
+                    if (currentUserName != null) {
+                        _currentUser.value = users.firstOrNull { it.name == currentUserName }
                     }
                 }
             }.onFailure { error ->
