@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.kxnst.bugsgame.R
-import com.kxnst.bugsgame.data.settings.GameSettingConstraints
+import com.kxnst.bugsgame.domain.game.GameRules
 import com.kxnst.bugsgame.databinding.FragmentSettingsBinding
 import com.kxnst.bugsgame.presentation.navigation.navigateToHome
 import com.kxnst.bugsgame.presentation.register.PlayerViewModel
@@ -47,25 +47,25 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     private fun setupDropdowns() {
         setupDropdown(
             binding.actvSpeed,
-            GameSettingConstraints.MIN_SPEED..GameSettingConstraints.MAX_SPEED
+            GameRules.MIN_SPEED..GameRules.MAX_SPEED
         ) { viewModel.updateSpeed(it) }
 
         setupDropdown(
             binding.actvMaxCockroaches,
-            GameSettingConstraints.MIN_MAX_COCKROACHES..
-                GameSettingConstraints.MAX_MAX_COCKROACHES
+            GameRules.MIN_MAX_COCKROACHES..
+                GameRules.MAX_MAX_COCKROACHES
         ) { viewModel.updateMaxCockroaches(it) }
 
         setupDropdown(
             binding.actvBonusInterval,
-            GameSettingConstraints.MIN_BONUS_INTERVAL_SECONDS..
-                GameSettingConstraints.MAX_BONUS_INTERVAL_SECONDS
+            GameRules.MIN_BONUS_INTERVAL_SECONDS..
+                GameRules.MAX_BONUS_INTERVAL_SECONDS
         ) { viewModel.updateBonusIntervalSeconds(it) }
 
         setupDropdown(
             binding.actvRoundDuration,
-            GameSettingConstraints.MIN_ROUND_DURATION_SECONDS..
-                GameSettingConstraints.MAX_ROUND_DURATION_SECONDS
+            GameRules.MIN_ROUND_DURATION_SECONDS..
+                GameRules.MAX_ROUND_DURATION_SECONDS
         ) { viewModel.updateRoundDurationSeconds(it) }
     }
 

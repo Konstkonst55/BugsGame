@@ -2,10 +2,11 @@ package com.kxnst.bugsgame.data.settings
 
 import android.content.Context
 
+import com.kxnst.bugsgame.domain.game.GameRules
+
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import androidx.core.content.edit
 
 class SharedPreferencesGameSettingsRepository(
     context: Context
@@ -20,41 +21,41 @@ class SharedPreferencesGameSettingsRepository(
 
     override fun updateSpeed(value: Int) {
         val safeValue = value.coerceIn(
-            GameSettingConstraints.MIN_SPEED,
-            GameSettingConstraints.MAX_SPEED
+            GameRules.MIN_SPEED,
+            GameRules.MAX_SPEED
         )
 
-        preferences.edit { putInt(KEY_SPEED, safeValue) }
+        preferences.edit().putInt(KEY_SPEED, safeValue).apply()
         updateState { it.copy(speed = safeValue) }
     }
 
     override fun updateMaxCockroaches(value: Int) {
         val safeValue = value.coerceIn(
-            GameSettingConstraints.MIN_MAX_COCKROACHES,
-            GameSettingConstraints.MAX_MAX_COCKROACHES
+            GameRules.MIN_MAX_COCKROACHES,
+            GameRules.MAX_MAX_COCKROACHES
         )
 
-        preferences.edit { putInt(KEY_MAX_COCKROACHES, safeValue) }
+        preferences.edit().putInt(KEY_MAX_COCKROACHES, safeValue).apply()
         updateState { it.copy(maxCockroaches = safeValue) }
     }
 
     override fun updateBonusIntervalSeconds(value: Int) {
         val safeValue = value.coerceIn(
-            GameSettingConstraints.MIN_BONUS_INTERVAL_SECONDS,
-            GameSettingConstraints.MAX_BONUS_INTERVAL_SECONDS
+            GameRules.MIN_BONUS_INTERVAL_SECONDS,
+            GameRules.MAX_BONUS_INTERVAL_SECONDS
         )
 
-        preferences.edit { putInt(KEY_BONUS_INTERVAL_SECONDS, safeValue) }
+        preferences.edit().putInt(KEY_BONUS_INTERVAL_SECONDS, safeValue).apply()
         updateState { it.copy(bonusIntervalSeconds = safeValue) }
     }
 
     override fun updateRoundDurationSeconds(value: Int) {
         val safeValue = value.coerceIn(
-            GameSettingConstraints.MIN_ROUND_DURATION_SECONDS,
-            GameSettingConstraints.MAX_ROUND_DURATION_SECONDS
+            GameRules.MIN_ROUND_DURATION_SECONDS,
+            GameRules.MAX_ROUND_DURATION_SECONDS
         )
 
-        preferences.edit { putInt(KEY_ROUND_DURATION_SECONDS, safeValue) }
+        preferences.edit().putInt(KEY_ROUND_DURATION_SECONDS, safeValue).apply()
         updateState { it.copy(roundDurationSeconds = safeValue) }
     }
 
@@ -62,31 +63,31 @@ class SharedPreferencesGameSettingsRepository(
         return GameSettings(
             speed = preferences.getInt(
                 KEY_SPEED,
-                GameSettingConstraints.DEFAULT_SPEED
+                GameRules.DEFAULT_SPEED
             ).coerceIn(
-                GameSettingConstraints.MIN_SPEED,
-                GameSettingConstraints.MAX_SPEED
+                GameRules.MIN_SPEED,
+                GameRules.MAX_SPEED
             ),
             maxCockroaches = preferences.getInt(
                 KEY_MAX_COCKROACHES,
-                GameSettingConstraints.DEFAULT_MAX_COCKROACHES
+                GameRules.DEFAULT_MAX_COCKROACHES
             ).coerceIn(
-                GameSettingConstraints.MIN_MAX_COCKROACHES,
-                GameSettingConstraints.MAX_MAX_COCKROACHES
+                GameRules.MIN_MAX_COCKROACHES,
+                GameRules.MAX_MAX_COCKROACHES
             ),
             bonusIntervalSeconds = preferences.getInt(
                 KEY_BONUS_INTERVAL_SECONDS,
-                GameSettingConstraints.DEFAULT_BONUS_INTERVAL_SECONDS
+                GameRules.DEFAULT_BONUS_INTERVAL_SECONDS
             ).coerceIn(
-                GameSettingConstraints.MIN_BONUS_INTERVAL_SECONDS,
-                GameSettingConstraints.MAX_BONUS_INTERVAL_SECONDS
+                GameRules.MIN_BONUS_INTERVAL_SECONDS,
+                GameRules.MAX_BONUS_INTERVAL_SECONDS
             ),
             roundDurationSeconds = preferences.getInt(
                 KEY_ROUND_DURATION_SECONDS,
-                GameSettingConstraints.DEFAULT_ROUND_DURATION_SECONDS
+                GameRules.DEFAULT_ROUND_DURATION_SECONDS
             ).coerceIn(
-                GameSettingConstraints.MIN_ROUND_DURATION_SECONDS,
-                GameSettingConstraints.MAX_ROUND_DURATION_SECONDS
+                GameRules.MIN_ROUND_DURATION_SECONDS,
+                GameRules.MAX_ROUND_DURATION_SECONDS
             )
         )
     }

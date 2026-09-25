@@ -8,6 +8,7 @@ import com.kxnst.bugsgame.data.settings.GameSettingsRepository
 import com.kxnst.bugsgame.data.user.UserRepository
 import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
 import com.kxnst.bugsgame.domain.game.RoundScoreInput
+import com.kxnst.bugsgame.domain.game.GameRules
 import com.kxnst.bugsgame.domain.user.UserProfile
 
 import kotlin.math.PI
@@ -48,7 +49,7 @@ class GameViewModel(
     private var spawnRemainingMs = 0L
     private var nextBugId = 0L
     private var nextRoundId = 0L
-    private var activeDifficulty = DEFAULT_DIFFICULTY
+    private var activeDifficulty = GameRules.DEFAULT_DIFFICULTY
 
     fun ensureUser(userName: String) {
         if (activeUserName != null && activeUserName != userName) {
@@ -66,8 +67,8 @@ class GameViewModel(
 
         val settings = settingsRepository.settings.value
         activeSettings = settings
-        activeDifficulty = user.difficulty.coerceIn(MIN_DIFFICULTY, MAX_DIFFICULTY)
-        remainingTimeMs = settings.roundDurationSeconds * MILLIS_PER_SECOND
+        activeDifficulty = user.difficulty.coerceIn(GameRules.MIN_DIFFICULTY, GameRules.MAX_DIFFICULTY)
+        remainingTimeMs = settings.roundDurationSeconds * GameRules.MILLIS_PER_SECOND
         spawnRemainingMs = 0L
 
         nextRoundId += 1
@@ -157,7 +158,7 @@ class GameViewModel(
 
     private fun updateGame(deltaSeconds: Float) {
         val settings = activeSettings ?: return
-        val deltaMs = (deltaSeconds * MILLIS_PER_SECOND).toLong()
+        val deltaMs = (deltaSeconds * GameRules.MILLIS_PER_SECOND).toLong()
 
         remainingTimeMs = (remainingTimeMs - deltaMs).coerceAtLeast(0L)
 
@@ -183,7 +184,7 @@ class GameViewModel(
         }
 
         _state.value = _state.value.copy(
-            remainingSeconds = ceil(remainingTimeMs / MILLIS_PER_SECOND.toFloat()).toInt(),
+            remainingSeconds = ceil(remainingTimeMs / GameRules.MILLIS_PER_SECOND.toFloat()).toInt(),
             bugs = bugs
         )
     }
@@ -280,10 +281,10 @@ class GameViewModel(
 
     private fun calculateSpawnInterval(difficulty: Int): Long {
         return when (difficulty) {
-            MIN_DIFFICULTY -> SPAWN_INTERVAL_EASY_MS
-            DEFAULT_DIFFICULTY -> SPAWN_INTERVAL_NORMAL_MS
-            MAX_DIFFICULTY -> SPAWN_INTERVAL_HARD_MS
-            else -> SPAWN_INTERVAL_NORMAL_MS
+            GameRules.MIN_DIFFICULTY -> GameRules.SPAWN_INTERVAL_EASY_MS
+            GameRules.DEFAULT_DIFFICULTY -> GameRules.SPAWN_INTERVAL_NORMAL_MS
+            GameRules.MAX_DIFFICULTY -> GameRules.SPAWN_INTERVAL_HARD_MS
+            else -> GameRules.SPAWN_INTERVAL_NORMAL_MS
         }
     }
 
@@ -293,13 +294,6 @@ class GameViewModel(
         const val BASE_SPEED = 0.14f
         const val BUG_HALF_SIZE = 0.07f
         const val BUG_HIT_HALF_SIZE = 0.09f
-        const val MIN_DIFFICULTY = 1
-        const val DEFAULT_DIFFICULTY = 2
-        const val MAX_DIFFICULTY = 3
-        const val SPAWN_INTERVAL_EASY_MS = 1400L
-        const val SPAWN_INTERVAL_NORMAL_MS = 900L
-        const val SPAWN_INTERVAL_HARD_MS = 500L
-        const val MILLIS_PER_SECOND = 1000L
         const val NANOS_PER_SECOND = 1_000_000_000f
     }
 }

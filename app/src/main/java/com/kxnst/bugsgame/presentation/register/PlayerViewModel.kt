@@ -9,6 +9,7 @@ import com.kxnst.bugsgame.data.user.UserRepository
 import com.kxnst.bugsgame.data.zodiac.ZodiacRepository
 import com.kxnst.bugsgame.data.zodiac.ZodiacSign
 import com.kxnst.bugsgame.domain.user.UserProfile
+import com.kxnst.bugsgame.domain.game.GameRules
 import com.kxnst.bugsgame.domain.zodiac.ZodiacCalculator
 
 import java.time.LocalDate
@@ -162,7 +163,7 @@ data class PlayerFormState(
     val fullName: String = "",
     val gender: String? = null,
     val course: String? = null,
-    val difficulty: Int = 2,
+    val difficulty: Int = GameRules.DEFAULT_DIFFICULTY,
     val birthDate: LocalDate? = null,
     val zodiac: ZodiacSign? = null,
     val registration: PlayerRegistration? = null

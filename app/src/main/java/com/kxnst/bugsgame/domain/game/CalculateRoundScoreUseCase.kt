@@ -10,7 +10,7 @@ class CalculateRoundScoreUseCase {
         ).coerceAtLeast(0f)
 
         val baselineSpawnCount = (
-            input.roundDurationSeconds * MILLIS_PER_SECOND / BASELINE_SPAWN_INTERVAL_MS
+            input.roundDurationSeconds * GameRules.MILLIS_PER_SECOND / GameRules.SPAWN_INTERVAL_NORMAL_MS
         ).coerceAtLeast(1L)
 
         val baselineExpectedPoints = baselineSpawnCount * AVERAGE_BUG_POINTS
@@ -19,29 +19,29 @@ class CalculateRoundScoreUseCase {
         ).coerceIn(0f, MAX_PERFORMANCE)
 
         val difficultyFactor = when (input.difficulty) {
-            MIN_DIFFICULTY -> DIFFICULTY_EASY_FACTOR
-            MAX_DIFFICULTY -> DIFFICULTY_HARD_FACTOR
+            GameRules.MIN_DIFFICULTY -> DIFFICULTY_EASY_FACTOR
+            GameRules.MAX_DIFFICULTY -> DIFFICULTY_HARD_FACTOR
             else -> DIFFICULTY_NORMAL_FACTOR
         }
 
         val speedFactor = interpolateFactor(
             input.speed,
-            MIN_SPEED,
-            MAX_SPEED,
+            GameRules.MIN_SPEED,
+            GameRules.MAX_SPEED,
             MIN_SPEED_FACTOR,
             MAX_SPEED_FACTOR
         )
 
         val maxBugsFactor = interpolateFactor(
             input.maxCockroaches,
-            MIN_MAX_BUGS,
-            MAX_MAX_BUGS,
+            GameRules.MIN_MAX_COCKROACHES,
+            GameRules.MAX_MAX_COCKROACHES,
             MIN_MAX_BUGS_FACTOR,
             MAX_MAX_BUGS_FACTOR
         )
 
         val durationFactor = sqrt(
-            (input.roundDurationSeconds.toFloat() / BASELINE_ROUND_DURATION_SECONDS)
+            (input.roundDurationSeconds.toFloat() / GameRules.DEFAULT_ROUND_DURATION_SECONDS.toFloat())
                 .coerceIn(MIN_DURATION_RATIO, MAX_DURATION_RATIO)
         ).coerceIn(MIN_DURATION_FACTOR, MAX_DURATION_FACTOR)
 
@@ -71,31 +71,22 @@ class CalculateRoundScoreUseCase {
 
     private companion object {
         const val PENALTY_COST = 1.5f
-        const val BASELINE_SPAWN_INTERVAL_MS = 900L
-        const val MILLIS_PER_SECOND = 1000L
         const val AVERAGE_BUG_POINTS = 2f
         const val MAX_PERFORMANCE = 1.4f
         const val BASE_SCORE = 500f
         const val MIN_SCORE = 0
         const val MAX_SCORE = 1000
 
-        const val MIN_DIFFICULTY = 1
-        const val MAX_DIFFICULTY = 3
         const val DIFFICULTY_EASY_FACTOR = 0.9f
         const val DIFFICULTY_NORMAL_FACTOR = 1f
         const val DIFFICULTY_HARD_FACTOR = 1.1f
 
-        const val MIN_SPEED = 1
-        const val MAX_SPEED = 10
         const val MIN_SPEED_FACTOR = 0.85f
         const val MAX_SPEED_FACTOR = 1.15f
 
-        const val MIN_MAX_BUGS = 1
-        const val MAX_MAX_BUGS = 10
         const val MIN_MAX_BUGS_FACTOR = 0.9f
         const val MAX_MAX_BUGS_FACTOR = 1.1f
 
-        const val BASELINE_ROUND_DURATION_SECONDS = 60f
         const val MIN_DURATION_RATIO = 0.5f
         const val MAX_DURATION_RATIO = 2f
         const val MIN_DURATION_FACTOR = 0.75f
