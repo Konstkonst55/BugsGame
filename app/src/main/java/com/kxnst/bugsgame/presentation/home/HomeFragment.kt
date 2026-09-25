@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.databinding.FragmentHomeBinding
 import com.kxnst.bugsgame.presentation.register.PlayerViewModel
+import com.kxnst.bugsgame.domain.game.GameRules
 import com.kxnst.bugsgame.presentation.user.UserSessionViewModel
 
 import java.time.LocalDate
@@ -50,7 +51,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         binding.tvBirthDate.text = LocalDate.parse(user.birthDate).format(dateFormatter)
                         binding.tvCourse.text = user.course
 
-                        val stars = "⭐".repeat(user.difficulty.coerceIn(1, 3))
+                        val stars = when (user.difficulty.coerceIn(
+                            GameRules.MIN_DIFFICULTY,
+                            GameRules.MAX_DIFFICULTY
+                        )) {
+                            GameRules.MIN_DIFFICULTY -> getString(
+                                R.string.home_text_difficulty_stars_one
+                            )
+                            GameRules.DEFAULT_DIFFICULTY -> getString(
+                                R.string.home_text_difficulty_stars_two
+                            )
+                            else -> getString(
+                                R.string.home_text_difficulty_stars_three
+                            )
+                        }
                         binding.tvDifficulty.text = getString(
                             R.string.home_difficulty_value,
                             stars

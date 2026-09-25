@@ -137,4 +137,8 @@
     <string name="user_select_title">Выбор пользователя</string>
     <string name="user_select_empty">Сохранённых пользователей пока нет</string>
     <string name="user_cancel">Отмена</string>
+    <string name="home_text_difficulty_stars_one">⭐</string>
+    <string name="home_text_difficulty_stars_two">⭐⭐</string>
+    <string name="home_text_difficulty_stars_three">⭐⭐⭐</string>
+
 </resources>
