@@ -11,10 +11,10 @@
     <integer name="font_black">900</integer>
     <integer name="max_lines_welcome_title">2</integer>
     <integer name="max_lines_welcome_description">4</integer>
-    <integer name="difficulty_min">1</integer>
-    <integer name="difficulty_max">3</integer>
-    <integer name="difficulty_default">2</integer>
     <integer name="max_lines_course">1</integer>
     <integer name="max_lines_zodiac">2</integer>
     <integer name="max_lines_settings_value">1</integer>
+    <integer name="difficulty_min">1</integer>
+    <integer name="difficulty_max">3</integer>
+    <integer name="difficulty_default">2</integer>
 </resources>

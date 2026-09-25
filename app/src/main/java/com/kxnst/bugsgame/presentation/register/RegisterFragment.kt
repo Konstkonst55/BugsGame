@@ -15,9 +15,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.radiobutton.MaterialRadioButton
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.databinding.FragmentRegisterBinding
+import com.kxnst.bugsgame.presentation.navigation.navigateToHome
+import com.kxnst.bugsgame.presentation.user.UserDialogHelper
+import com.kxnst.bugsgame.presentation.user.UserListState
+import com.kxnst.bugsgame.presentation.user.UserSessionViewModel
 
 import java.time.LocalDate
 
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
@@ -26,6 +31,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
     private val viewModel: PlayerViewModel by activityViewModel()
+    private val userSessionViewModel: UserSessionViewModel by activityViewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,6 +40,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         setupViews()
         observeState()
+        observeRegistrationEvents()
     }
 
     private fun setupViews() {
@@ -50,11 +57,13 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         }
 
         binding.etFullName.doAfterTextChanged { value ->
+            binding.tilFullName.error = null
             viewModel.updateFullName(value.toString())
         }
 
         binding.rgGender.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1) {
+                binding.tvGender.error = null
                 viewModel.updateGender(
                     binding.root.findViewById<MaterialRadioButton>(checkedId).text.toString()
                 )
@@ -71,7 +80,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                     viewModel.updateDifficulty(progress)
                 }
 
-                binding.tvDifficulty.text = getString(R.string.register_difficulty_value, progress)
+                binding.tvDifficulty.text = getString(
+                    R.string.register_difficulty_value,
+                    progress
+                )
             }
 
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) = Unit
@@ -81,6 +93,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         binding.cvBirthDate.maxDate = System.currentTimeMillis()
         binding.cvBirthDate.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            binding.tvBirthDate.error = null
             viewModel.updateBirthDate(LocalDate.of(year, month + 1, dayOfMonth))
         }
 
@@ -89,6 +102,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         } ?: viewModel.updateBirthDate(LocalDate.now())
 
         binding.bSubmit.setOnClickListener { submit() }
+        binding.bChooseUser.setOnClickListener { showUserSelection() }
     }
 
     private fun observeState() {
@@ -124,6 +138,27 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         }
     }
 
+    private fun observeRegistrationEvents() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.registrationEvents.collect { event ->
+                    when (event) {
+                        is RegistrationEvent.Success -> {
+                            userSessionViewModel.setCurrentUser(event.user)
+                            findNavController().navigateToHome()
+                        }
+
+                        RegistrationEvent.DuplicateName -> {
+                            binding.tilFullName.error = getString(
+                                R.string.register_error_name_exists
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun renderZodiacState(state: ZodiacLoadState) {
         binding.pbZodiac.isVisible = state is ZodiacLoadState.Loading
         binding.tvZodiacState.isVisible =
@@ -137,7 +172,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
 
             is ZodiacLoadState.Error -> {
-                binding.tvZodiacState.text = getString(R.string.register_error_zodiac_load)
+                binding.tvZodiacState.text = getString(
+                    R.string.register_error_zodiac_load
+                )
             }
 
             ZodiacLoadState.Ready -> {
@@ -177,15 +214,39 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             binding.tvBirthDate.error = null
         }
 
-        if (valid && viewModel.register()) {
-            findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
+        if (valid) {
+            viewModel.register()
+        }
+    }
+
+    private fun showUserSelection() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            when (val state = userSessionViewModel.usersState.first { it !is UserListState.Loading }) {
+                UserListState.Empty -> {
+                    UserDialogHelper.showUserSelectionDialog(this@RegisterFragment, emptyList()) { }
+                }
+
+                is UserListState.Error -> {
+                    UserDialogHelper.showUserSelectionDialog(this@RegisterFragment, emptyList()) { }
+                }
+
+                is UserListState.Content -> {
+                    UserDialogHelper.showUserSelectionDialog(this@RegisterFragment, state.users) { user ->
+                        viewModel.loadUser(user)
+                        userSessionViewModel.setCurrentUser(user)
+                        findNavController().navigateToHome()
+                    }
+                }
+
+                UserListState.Loading -> Unit
+            }
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-
         _binding = null
+
+        super.onDestroyView()
     }
 
     private companion object {

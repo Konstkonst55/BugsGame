@@ -21,6 +21,8 @@
     <string name="register_error_course">Выберите курс</string>
     <string name="register_error_birth_date">Выберите дату рождения</string>
     <string name="register_error_zodiac_load">Не удалось загрузить знаки зодиака</string>
+    <string name="register_error_name_exists">Пользователь с таким именем уже зарегистрирован</string>
+    <string name="register_button_choose_user">Выбрать существующего пользователя</string>
     <string name="register_empty_zodiac">Знаки зодиака не найдены</string>
 
     <string name="home_title">Главная</string>
@@ -69,6 +71,9 @@
     ]]></string>
 
     <string name="authors_title">Авторы</string>
+    <string name="records_title">Рекорды</string>
+    <string name="records_empty">Пока нет сохранённых рекордов</string>
+    <string name="records_error">Не удалось загрузить рекорды</string>
     <string name="authors_name">Архипов Константин</string>
     <string name="authors_name_bugs_game_team">Команда BugsGame</string>
     <string name="authors_cd_author_photo">Фотография автора</string>
@@ -84,10 +89,13 @@
     <string name="settings_cd_round_duration_picker">Длительность раунда в секундах</string>
 
     <string name="toolbar_settings">Настройки</string>
+    <string name="toolbar_new_user">Зарегистрировать нового пользователя</string>
+    <string name="toolbar_back">Назад</string>
     <string name="menu_home">Главная</string>
     <string name="menu_game">Игра</string>
     <string name="menu_rules">Правила</string>
     <string name="menu_authors">Авторы</string>
+    <string name="menu_records">Рекорды</string>
 
     <string name="game_title">Игра</string>
     <string name="game_score_value">%1$d</string>
@@ -111,8 +119,17 @@
     <string name="game_yes">Да</string>
     <string name="game_no">Нет</string>
     <string name="game_result_title">Раунд завершён</string>
-    <string name="game_result_message">Очки: %1$d\nШтрафы: %2$d\nДлительность: %3$d с</string>
+    <string name="game_result_message">Очки: %1$d\nШтрафы: %2$d\nИтоговый счёт: %3$d\nДлительность: %4$d с</string>
     <string name="game_result_restart">Перезапустить раунд</string>
     <string name="game_result_home">На главную</string>
-    <string name="toolbar_back">Назад</string>
+
+    <string name="settings_change_user">Сменить пользователя</string>
+
+    <string name="user_switch_title">Смена пользователя</string>
+    <string name="user_switch_message">Зарегистрировать нового пользователя или выбрать уже созданного ранее?</string>
+    <string name="user_register_new">Зарегистрировать нового</string>
+    <string name="user_select_existing">Выбрать существующего</string>
+    <string name="user_select_title">Выбор пользователя</string>
+    <string name="user_select_empty">Сохранённых пользователей пока нет</string>
+    <string name="user_cancel">Отмена</string>
 </resources>
