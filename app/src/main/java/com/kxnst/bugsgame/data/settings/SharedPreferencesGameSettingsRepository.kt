@@ -7,6 +7,7 @@ import com.kxnst.bugsgame.domain.game.GameRules
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import androidx.core.content.edit
 
 class SharedPreferencesGameSettingsRepository(
     context: Context
@@ -25,7 +26,7 @@ class SharedPreferencesGameSettingsRepository(
             GameRules.MAX_SPEED
         )
 
-        preferences.edit().putInt(KEY_SPEED, safeValue).apply()
+        preferences.edit { putInt(KEY_SPEED, safeValue) }
         updateState { it.copy(speed = safeValue) }
     }
 
@@ -35,7 +36,7 @@ class SharedPreferencesGameSettingsRepository(
             GameRules.MAX_MAX_COCKROACHES
         )
 
-        preferences.edit().putInt(KEY_MAX_COCKROACHES, safeValue).apply()
+        preferences.edit { putInt(KEY_MAX_COCKROACHES, safeValue) }
         updateState { it.copy(maxCockroaches = safeValue) }
     }
 
@@ -45,7 +46,7 @@ class SharedPreferencesGameSettingsRepository(
             GameRules.MAX_BONUS_INTERVAL_SECONDS
         )
 
-        preferences.edit().putInt(KEY_BONUS_INTERVAL_SECONDS, safeValue).apply()
+        preferences.edit { putInt(KEY_BONUS_INTERVAL_SECONDS, safeValue) }
         updateState { it.copy(bonusIntervalSeconds = safeValue) }
     }
 
@@ -55,7 +56,7 @@ class SharedPreferencesGameSettingsRepository(
             GameRules.MAX_ROUND_DURATION_SECONDS
         )
 
-        preferences.edit().putInt(KEY_ROUND_DURATION_SECONDS, safeValue).apply()
+        preferences.edit { putInt(KEY_ROUND_DURATION_SECONDS, safeValue) }
         updateState { it.copy(roundDurationSeconds = safeValue) }
     }
 
