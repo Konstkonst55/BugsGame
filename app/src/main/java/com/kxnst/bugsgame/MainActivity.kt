@@ -15,12 +15,14 @@ import androidx.navigation.ui.setupWithNavController
 
 import com.kxnst.bugsgame.databinding.ActivityMainBinding
 import com.kxnst.bugsgame.presentation.game.GameViewModel
+import com.kxnst.bugsgame.presentation.register.PlayerViewModel
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val gameViewModel: GameViewModel by viewModel()
+    private val playerViewModel: PlayerViewModel by viewModel()
 
     private val fullscreenBackCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -48,6 +50,12 @@ class MainActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.action_toolbar_settings -> {
                         navController.navigate(R.id.action_global_settings)
+                        true
+                    }
+
+                    R.id.action_toolbar_new_user -> {
+                        playerViewModel.resetForm()
+                        navController.navigate(R.id.registerFragment)
                         true
                     }
 
@@ -83,13 +91,15 @@ class MainActivity : AppCompatActivity() {
         destinationId: Int,
         destinationLabel: CharSequence?
     ) {
+        val isRegister = destinationId == R.id.registerFragment
         val isGame = destinationId == R.id.gameFragment
         val isSettings = destinationId == R.id.settingsFragment
         val isBottomDestination = destinationId in setOf(
             R.id.homeFragment,
             R.id.gameFragment,
             R.id.rulesFragment,
-            R.id.authorsFragment
+            R.id.authorsFragment,
+            R.id.recordsFragment
         )
         val isFullscreen =
             isGame && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -100,6 +110,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.tbMain.menu.findItem(R.id.action_toolbar_settings).isVisible =
             isBottomDestination && !isFullscreen
+        binding.tbMain.menu.findItem(R.id.action_toolbar_new_user).isVisible =
+            !isRegister && !isFullscreen
         binding.tbMain.menu.findItem(R.id.action_toolbar_restart).isVisible =
             isGame && !isFullscreen
 

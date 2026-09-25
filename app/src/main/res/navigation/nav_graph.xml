@@ -26,6 +26,11 @@
         android:label="@string/game_title" />
 
     <fragment
+        android:id="@+id/recordsFragment"
+        android:name="com.kxnst.bugsgame.presentation.records.RecordsFragment"
+        android:label="@string/records_title" />
+
+    <fragment
         android:id="@+id/rulesFragment"
         android:name="com.kxnst.bugsgame.presentation.rules.RulesFragment"
         android:label="@string/rules_title" />

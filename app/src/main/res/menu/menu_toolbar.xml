@@ -9,6 +9,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/action_toolbar_new_user"
+        android:icon="@drawable/ic_toolbar_add_user"
+        android:title="@string/toolbar_new_user"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_toolbar_restart"
         android:icon="@drawable/ic_toolbar_restart"
         android:title="@string/game_toolbar_restart"
