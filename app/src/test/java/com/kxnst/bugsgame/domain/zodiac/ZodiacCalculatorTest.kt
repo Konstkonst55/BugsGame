@@ -1,16 +1,17 @@
 package com.kxnst.bugsgame.domain.zodiac
 
 import com.kxnst.bugsgame.data.zodiac.ZodiacSign
-import org.junit.Test
 import java.time.LocalDate
-import kotlin.test.assertEquals
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class ZodiacCalculatorTest {
     private val signs = listOf(
-        ZodiacSign("Овен", "", "", 3, 21, 4, 19),
-        ZodiacSign("Телец", "", "", 4, 20, 5, 20),
-        ZodiacSign("Козерог", "", "", 12, 22, 1, 19)
+        ZodiacSign("Овен", "", 0, 3, 21, 4, 19),
+        ZodiacSign("Телец", "", 0, 4, 20, 5, 20),
+        ZodiacSign("Козерог", "", 0, 12, 22, 1, 19)
     )
+
     private val calculator = ZodiacCalculator()
 
     @Test
