@@ -5,6 +5,10 @@ import androidx.lifecycle.viewModelScope
 
 import com.kxnst.bugsgame.data.settings.GameSettings
 import com.kxnst.bugsgame.data.settings.GameSettingsRepository
+import com.kxnst.bugsgame.data.user.UserRepository
+import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
+import com.kxnst.bugsgame.domain.game.RoundScoreInput
+import com.kxnst.bugsgame.domain.user.UserProfile
 
 import kotlin.math.PI
 import kotlin.math.abs
@@ -26,7 +30,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class GameViewModel(
-    private val settingsRepository: GameSettingsRepository
+    private val settingsRepository: GameSettingsRepository,
+    private val userRepository: UserRepository,
+    private val calculateRoundScore: CalculateRoundScoreUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
@@ -37,18 +43,30 @@ class GameViewModel(
     private val random = Random(System.currentTimeMillis())
     private var gameJob: Job? = null
     private var activeSettings: GameSettings? = null
+    private var activeUserName: String? = null
     private var remainingTimeMs = 0L
     private var spawnRemainingMs = 0L
     private var nextBugId = 0L
     private var nextRoundId = 0L
     private var activeDifficulty = DEFAULT_DIFFICULTY
 
-    fun startRound(difficulty: Int) {
+    fun ensureUser(userName: String) {
+        if (activeUserName != null && activeUserName != userName) {
+            pauseGame()
+            activeSettings = null
+            _state.value = GameState()
+        }
+
+        activeUserName = userName
+    }
+
+    fun startRound(user: UserProfile) {
         pauseGame()
+        ensureUser(user.name)
 
         val settings = settingsRepository.settings.value
         activeSettings = settings
-        activeDifficulty = difficulty.coerceIn(MIN_DIFFICULTY, MAX_DIFFICULTY)
+        activeDifficulty = user.difficulty.coerceIn(MIN_DIFFICULTY, MAX_DIFFICULTY)
         remainingTimeMs = settings.roundDurationSeconds * MILLIS_PER_SECOND
         spawnRemainingMs = 0L
 
@@ -123,7 +141,7 @@ class GameViewModel(
 
         while (currentCoroutineContext().isActive) {
             val currentTickAt = System.nanoTime()
-            val deltaSeconds = ((currentTickAt - lastTickAt) / 1_000_000_000f)
+            val deltaSeconds = ((currentTickAt - lastTickAt) / NANOS_PER_SECOND)
                 .coerceIn(0f, MAX_DELTA_SECONDS)
 
             lastTickAt = currentTickAt
@@ -172,20 +190,40 @@ class GameViewModel(
 
     private fun finishRound(settings: GameSettings) {
         val state = _state.value
+        val userName = activeUserName ?: return
+        val finalScore = calculateRoundScore.execute(
+            RoundScoreInput(
+                points = state.score,
+                penalties = state.penalties,
+                difficulty = activeDifficulty,
+                speed = settings.speed,
+                maxCockroaches = settings.maxCockroaches,
+                roundDurationSeconds = settings.roundDurationSeconds
+            )
+        )
+
+        val result = GameResult(
+            roundId = nextRoundId,
+            userName = userName,
+            rawScore = state.score,
+            penalties = state.penalties,
+            finalScore = finalScore,
+            difficulty = activeDifficulty,
+            roundDurationSeconds = settings.roundDurationSeconds,
+            speed = settings.speed,
+            maxCockroaches = settings.maxCockroaches
+        )
 
         _state.value = state.copy(
             phase = GamePhase.FINISHED,
             remainingSeconds = 0,
             bugs = emptyList(),
-            result = GameResult(
-                roundId = nextRoundId,
-                score = state.score,
-                penalties = state.penalties,
-                roundDurationSeconds = settings.roundDurationSeconds,
-                speed = settings.speed,
-                maxCockroaches = settings.maxCockroaches
-            )
+            result = result
         )
+
+        viewModelScope.launch {
+            userRepository.updateBestScore(userName, finalScore)
+        }
     }
 
     private fun moveBug(
@@ -222,6 +260,7 @@ class GameViewModel(
         val angle = random.nextDouble(0.0, PI * 2)
         val directionX = cos(angle).toFloat()
         val directionY = sin(angle).toFloat()
+
         return GameBug(
             id = nextBugId++,
             type = type,
@@ -261,5 +300,6 @@ class GameViewModel(
         const val SPAWN_INTERVAL_NORMAL_MS = 900L
         const val SPAWN_INTERVAL_HARD_MS = 500L
         const val MILLIS_PER_SECOND = 1000L
+        const val NANOS_PER_SECOND = 1_000_000_000f
     }
 }

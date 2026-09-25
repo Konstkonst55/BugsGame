@@ -8,8 +8,11 @@ enum class GamePhase {
 
 data class GameResult(
     val roundId: Long,
-    val score: Int,
+    val userName: String,
+    val rawScore: Int,
     val penalties: Int,
+    val finalScore: Int,
+    val difficulty: Int,
     val roundDurationSeconds: Int,
     val speed: Int,
     val maxCockroaches: Int

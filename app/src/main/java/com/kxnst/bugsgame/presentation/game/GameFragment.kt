@@ -5,18 +5,19 @@ import android.os.Bundle
 import android.view.View
 
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 
 import com.kxnst.bugsgame.MainActivity
-import com.kxnst.bugsgame.presentation.register.PlayerViewModel
 import com.kxnst.bugsgame.R
 import com.kxnst.bugsgame.databinding.FragmentGameBinding
+import com.kxnst.bugsgame.domain.user.UserProfile
+import com.kxnst.bugsgame.presentation.user.UserSessionViewModel
 
 import kotlinx.coroutines.launch
 
@@ -26,7 +27,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
     private val viewModel: GameViewModel by activityViewModel()
-    private val playerViewModel: PlayerViewModel by activityViewModel()
+    private val userSessionViewModel: UserSessionViewModel by activityViewModel()
     private var startDialogShown = false
     private var lastResultRoundId: Long? = null
 
@@ -37,8 +38,13 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         binding.gbvGame.onTap = viewModel::handleTap
         binding.ibFullscreen.setOnClickListener { toggleFullscreen() }
 
+        userSessionViewModel.currentUser.value?.let { user ->
+            viewModel.ensureUser(user.name)
+        }
+
         observeState()
         observeRestartRequests()
+        observeCurrentUser()
         applyFullscreenLayout(
             resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         )
@@ -77,9 +83,21 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         }
     }
 
+    private fun observeCurrentUser() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userSessionViewModel.currentUser.collect { user ->
+                    if (user != null) {
+                        viewModel.ensureUser(user.name)
+                    }
+                }
+            }
+        }
+    }
+
     private fun renderState(state: GameState) {
-        binding.tvScore.text = getString(R.string.game_score_value, state.score)
-        binding.tvPenalties.text = getString(R.string.game_penalty_value, state.penalties)
+        binding.tvScore.text = state.score.toString()
+        binding.tvPenalties.text = state.penalties.toString()
         binding.tvTimer.text = formatTime(state.remainingSeconds)
 
         binding.tvFullscreenScore.text = state.score.toString()
@@ -130,7 +148,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.game_start_title)
             .setPositiveButton(R.string.game_start_button) { _, _ ->
-                viewModel.startRound(playerViewModel.formState.value.difficulty)
+                userSessionViewModel.currentUser.value?.let(viewModel::startRound)
             }
             .setNegativeButton(R.string.game_rules_button) { _, _ ->
                 findNavController().navigate(R.id.action_global_rules)
@@ -144,7 +162,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             .setTitle(R.string.game_restart_title)
             .setMessage(R.string.game_restart_message)
             .setPositiveButton(R.string.game_yes) { _, _ ->
-                viewModel.startRound(playerViewModel.formState.value.difficulty)
+                startRoundForCurrentUser()
             }
             .setNegativeButton(R.string.game_no) { _, _ ->
                 viewModel.resumeRound()
@@ -158,8 +176,9 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     private fun showResultDialog(result: GameResult) {
         val message = getString(
             R.string.game_result_message,
-            result.score,
+            result.rawScore,
             result.penalties,
+            result.finalScore,
             result.roundDurationSeconds
         )
 
@@ -167,7 +186,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             .setTitle(R.string.game_result_title)
             .setMessage(message)
             .setPositiveButton(R.string.game_result_restart) { _, _ ->
-                viewModel.startRound(playerViewModel.formState.value.difficulty)
+                startRoundForCurrentUser()
             }
             .setNegativeButton(R.string.game_result_home) { _, _ ->
                 findNavController().navigate(
@@ -180,6 +199,11 @@ class GameFragment : Fragment(R.layout.fragment_game) {
             }
             .setCancelable(false)
             .show()
+    }
+
+    private fun startRoundForCurrentUser() {
+        val user = userSessionViewModel.currentUser.value ?: return
+        viewModel.startRound(user)
     }
 
     private fun toggleFullscreen() {
