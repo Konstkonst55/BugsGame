@@ -20,6 +20,7 @@ import com.kxnst.bugsgame.presentation.user.UserSessionViewModel
 
 import kotlinx.coroutines.launch
 
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class GameFragment : Fragment(R.layout.fragment_game) {
@@ -27,6 +28,8 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     private val binding get() = _binding!!
     private val viewModel: GameViewModel by activityViewModel()
     private val userSessionViewModel: UserSessionViewModel by activityViewModel()
+    private val audioManager: GameAudioManager by inject()
+    private lateinit var tiltSensorController: TiltSensorController
     private var startDialogShown = false
     private var lastResultRoundId: Long? = null
 
@@ -34,6 +37,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentGameBinding.bind(view)
+        tiltSensorController = TiltSensorController(requireContext())
         binding.gbvGame.onTap = viewModel::handleTap
         binding.ibFullscreen.setOnClickListener { toggleFullscreen() }
 
@@ -44,6 +48,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         observeState()
         observeRestartRequests()
         observeCurrentUser()
+        observeSoundEvents()
         applyFullscreenLayout(
             resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         )
@@ -52,10 +57,13 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     override fun onStart() {
         super.onStart()
 
+        tiltSensorController.start(viewModel::updateTilt)
         viewModel.resumeRound()
     }
 
     override fun onStop() {
+        tiltSensorController.stop()
+        audioManager.stopBugMovementSounds()
         viewModel.pauseGame()
 
         super.onStop()
@@ -67,6 +75,27 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                 viewModel.state.collect { state ->
                     renderState(state)
                     handlePhase(state)
+
+                    if (state.phase == GamePhase.RUNNING) {
+                        audioManager.updateBugMovementSounds(state.bugs)
+                    } else {
+                        audioManager.stopBugMovementSounds()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeSoundEvents() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.soundEvents.collect { event ->
+                    when (event) {
+                        GameSoundEvent.BugHit -> audioManager.playBugHit()
+                        GameSoundEvent.Penalty -> audioManager.playPenalty()
+                        GameSoundEvent.BonusCollected -> audioManager.playBonusCollected()
+                        is GameSoundEvent.BonusActivated -> audioManager.playBonusActivation(event.bugCount)
+                    }
                 }
             }
         }
@@ -246,7 +275,8 @@ class GameFragment : Fragment(R.layout.fragment_game) {
 
         binding.root.setPadding(padding, padding, padding, padding)
 
-        val boardLayoutParams = binding.gbvGame.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+        val boardLayoutParams =
+            binding.gbvGame.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
         boardLayoutParams.topMargin = resources.getDimensionPixelSize(
             if (isFullscreen) R.dimen.size_zero else R.dimen.margin_medium
         )
