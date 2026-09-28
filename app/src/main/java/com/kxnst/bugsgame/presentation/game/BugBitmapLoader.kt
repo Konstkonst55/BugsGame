@@ -3,7 +3,9 @@ package com.kxnst.bugsgame.presentation.game
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+
 import androidx.appcompat.content.res.AppCompatResources
+
 import com.kxnst.bugsgame.R
 import androidx.core.graphics.createBitmap
 
@@ -17,9 +19,16 @@ class BugBitmapLoader(
             BugType.FLY -> R.drawable.ph_bug_third
         }
 
-        val drawable = AppCompatResources.getDrawable(context, resourceId)
-            ?: error("Bug drawable is not available")
+        return load(resourceId)
+    }
 
+    fun loadBonus(): Bitmap {
+        return load(R.drawable.ph_bonus)
+    }
+
+    private fun load(resourceId: Int): Bitmap {
+        val drawable = AppCompatResources.getDrawable(context, resourceId)
+            ?: error("Game drawable is not available")
         val width = drawable.intrinsicWidth.coerceAtLeast(MIN_BITMAP_SIZE)
         val height = drawable.intrinsicHeight.coerceAtLeast(MIN_BITMAP_SIZE)
         val bitmap = createBitmap(width, height)
