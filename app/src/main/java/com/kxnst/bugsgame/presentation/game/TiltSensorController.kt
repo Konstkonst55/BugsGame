@@ -39,7 +39,7 @@ class TiltSensorController(
         val x = event.values[0]
         val y = event.values[1]
         val magnitude = sqrt(x * x + y * y).coerceAtLeast(MIN_GRAVITY)
-        val normalizedX = x / magnitude
+        val normalizedX = -x / magnitude
         val normalizedY = y / magnitude
         val rotation = displayManager
             .getDisplay(Display.DEFAULT_DISPLAY)
