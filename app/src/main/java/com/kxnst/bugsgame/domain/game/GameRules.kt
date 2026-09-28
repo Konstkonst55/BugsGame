@@ -24,6 +24,10 @@ object GameRules {
     const val SPAWN_INTERVAL_EASY_MS = 1400L
     const val SPAWN_INTERVAL_NORMAL_MS = 900L
     const val SPAWN_INTERVAL_HARD_MS = 500L
+    const val BONUS_DURATION_SECONDS = 7
+    const val MAX_BUG_SOUND_SOURCES = 3
+    const val MIN_SOUND_PITCH = 0.85f
+    const val MAX_SOUND_PITCH = 1.15f
 
     const val MILLIS_PER_SECOND = 1000L
 }

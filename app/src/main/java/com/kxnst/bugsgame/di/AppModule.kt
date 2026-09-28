@@ -11,6 +11,7 @@ import com.kxnst.bugsgame.data.zodiac.AndroidResourceZodiacRepository
 import com.kxnst.bugsgame.data.zodiac.ZodiacRepository
 import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
 import com.kxnst.bugsgame.domain.zodiac.ZodiacCalculator
+import com.kxnst.bugsgame.presentation.game.GameAudioManager
 import com.kxnst.bugsgame.presentation.game.GameViewModel
 import com.kxnst.bugsgame.presentation.register.PlayerViewModel
 import com.kxnst.bugsgame.presentation.settings.GameSettingsViewModel
@@ -35,6 +36,7 @@ val appModule = module {
     single<ZodiacRepository> { AndroidResourceZodiacRepository(androidContext().resources) }
     single { ZodiacCalculator() }
     single { CalculateRoundScoreUseCase() }
+    single { GameAudioManager(androidContext()) }
 
     viewModel { PlayerViewModel(get(), get(), get()) }
     viewModel { UserSessionViewModel(get()) }
