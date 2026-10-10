@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.scalars)
 
     ksp(libs.androidx.room.compiler)
 
