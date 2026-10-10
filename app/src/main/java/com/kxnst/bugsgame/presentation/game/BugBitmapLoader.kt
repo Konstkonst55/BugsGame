@@ -26,6 +26,10 @@ class BugBitmapLoader(
         return load(R.drawable.ph_bonus)
     }
 
+    fun loadGoldenBug(): Bitmap {
+        return load(R.drawable.ph_bug_gold)
+    }
+
     private fun load(resourceId: Int): Bitmap {
         val drawable = AppCompatResources.getDrawable(context, resourceId)
             ?: error("Game drawable is not available")

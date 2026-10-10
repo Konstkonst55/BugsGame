@@ -37,6 +37,7 @@ class GameBoardView @JvmOverloads constructor(
     private val bitmapLoader = BugBitmapLoader(context)
     private val bitmaps = BugType.entries.associateWith(bitmapLoader::load)
     private val bonusBitmap = bitmapLoader.loadBonus()
+    private val goldenBugBitmap = bitmapLoader.loadGoldenBug()
     private val destination = RectF()
     private val outlineDestination = RectF()
     private var gameState = GameState()
@@ -57,9 +58,34 @@ class GameBoardView @JvmOverloads constructor(
         super.onDraw(canvas)
 
         val bugSize = minOf(width, height) * BUG_SIZE_RATIO
+        val goldenBugSize = bugSize * GOLDEN_BUG_SIZE_MULTIPLIER
         val bugOutlineOffset = (bugSize * OUTLINE_RATIO).coerceAtLeast(MIN_OUTLINE_OFFSET)
+        val goldenBugOutlineOffset =
+            (goldenBugSize * OUTLINE_RATIO).coerceAtLeast(MIN_OUTLINE_OFFSET)
         val bonusSize = minOf(width, height) * BONUS_SIZE_RATIO
         val bonusOutlineOffset = (bonusSize * OUTLINE_RATIO).coerceAtLeast(MIN_OUTLINE_OFFSET)
+
+        gameState.bugs.forEach { bug ->
+            drawBug(
+                canvas = canvas,
+                bug = bug,
+                bitmap = bitmaps.getValue(bug.type),
+                size = bugSize,
+                outlineOffset = bugOutlineOffset,
+                outlinePaint = outlinePaint
+            )
+        }
+
+        gameState.goldenBugs.forEach { bug ->
+            drawBug(
+                canvas = canvas,
+                bug = bug,
+                bitmap = goldenBugBitmap,
+                size = goldenBugSize,
+                outlineOffset = goldenBugOutlineOffset,
+                outlinePaint = outlinePaint
+            )
+        }
 
         gameState.bonus?.let { bonus ->
             val centerX = bonus.x * width
@@ -75,22 +101,28 @@ class GameBoardView @JvmOverloads constructor(
             drawOutline(canvas, bonusBitmap, destination, bonusOutlineOffset, bonusOutlinePaint)
             canvas.drawBitmap(bonusBitmap, null, destination, paint)
         }
+    }
 
-        gameState.bugs.forEach { bug ->
-            val bitmap = bitmaps.getValue(bug.type)
-            val centerX = bug.x * width
-            val centerY = bug.y * height
+    private fun drawBug(
+        canvas: Canvas,
+        bug: GameBug,
+        bitmap: Bitmap,
+        size: Float,
+        outlineOffset: Float,
+        outlinePaint: Paint
+    ) {
+        val centerX = bug.x * width
+        val centerY = bug.y * height
 
-            destination.set(
-                centerX - bugSize / 2f,
-                centerY - bugSize / 2f,
-                centerX + bugSize / 2f,
-                centerY + bugSize / 2f
-            )
+        destination.set(
+            centerX - size / 2f,
+            centerY - size / 2f,
+            centerX + size / 2f,
+            centerY + size / 2f
+        )
 
-            drawOutline(canvas, bitmap, destination, bugOutlineOffset, outlinePaint)
-            canvas.drawBitmap(bitmap, null, destination, paint)
-        }
+        drawOutline(canvas, bitmap, destination, outlineOffset, outlinePaint)
+        canvas.drawBitmap(bitmap, null, destination, paint)
     }
 
     private fun drawOutline(
@@ -159,6 +191,7 @@ class GameBoardView @JvmOverloads constructor(
 
     private companion object {
         const val BUG_SIZE_RATIO = 0.14f
+        const val GOLDEN_BUG_SIZE_MULTIPLIER = 1.05f
         const val BONUS_SIZE_RATIO = 0.16f
         const val OUTLINE_RATIO = 0.018f
         const val MIN_OUTLINE_OFFSET = 1f

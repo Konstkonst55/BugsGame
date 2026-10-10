@@ -9,6 +9,7 @@ import com.kxnst.bugsgame.data.user.UserRepository
 import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
 import com.kxnst.bugsgame.domain.game.GameRules
 import com.kxnst.bugsgame.domain.game.RoundScoreInput
+import com.kxnst.bugsgame.domain.gold.GoldPriceRepository
 import com.kxnst.bugsgame.domain.user.UserProfile
 
 import kotlin.math.PI
@@ -16,13 +17,13 @@ import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.exp
+import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
 
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,12 +31,14 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class GameViewModel(
     private val settingsRepository: GameSettingsRepository,
     private val userRepository: UserRepository,
-    private val calculateRoundScore: CalculateRoundScoreUseCase
+    private val calculateRoundScore: CalculateRoundScoreUseCase,
+    private val goldPriceRepository: GoldPriceRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
@@ -54,11 +57,13 @@ class GameViewModel(
     private var spawnRemainingMs = 0L
     private var bonusSpawnRemainingMs = 0L
     private var bonusRemainingMs = 0L
+    private var goldenBugSpawnRemainingMs = 0L
     private var nextBugId = 0L
     private var nextRoundId = 0L
     private var activeDifficulty = GameRules.DEFAULT_DIFFICULTY
     private var tiltX = 0f
     private var tiltY = 0f
+    private var goldenBugRewardPoints = GameRules.DEFAULT_GOLD_BUG_REWARD_POINTS
 
     fun ensureUser(userName: String) {
         if (activeUserName != null && activeUserName != userName) {
@@ -84,8 +89,11 @@ class GameViewModel(
         spawnRemainingMs = 0L
         bonusSpawnRemainingMs = settings.bonusIntervalSeconds * GameRules.MILLIS_PER_SECOND
         bonusRemainingMs = 0L
+        goldenBugSpawnRemainingMs =
+            GameRules.GOLD_BUG_SPAWN_INTERVAL_SECONDS * GameRules.MILLIS_PER_SECOND
         tiltX = 0f
         tiltY = 0f
+        goldenBugRewardPoints = GameRules.DEFAULT_GOLD_BUG_REWARD_POINTS
 
         nextRoundId += 1
         _state.value = GameState(
@@ -94,10 +102,12 @@ class GameViewModel(
             penalties = 0,
             remainingSeconds = settings.roundDurationSeconds,
             bugs = emptyList(),
+            goldenBugs = emptyList(),
             bonus = null,
             result = null
         )
 
+        refreshGoldenBugReward()
         startGameLoop()
     }
 
@@ -135,6 +145,23 @@ class GameViewModel(
             return
         }
 
+        val goldenIndex = state.goldenBugs.indexOfLast { bug ->
+            isInside(x, y, bug.x, bug.y, GOLD_BUG_HIT_HALF_SIZE)
+        }
+
+        if (goldenIndex != -1) {
+            val updatedGoldenBugs = state.goldenBugs.toMutableList().apply {
+                removeAt(goldenIndex)
+            }
+
+            _state.value = state.copy(
+                score = state.score + goldenBugRewardPoints,
+                goldenBugs = updatedGoldenBugs
+            )
+            _soundEvents.tryEmit(GameSoundEvent.GoldenBugCollected)
+            return
+        }
+
         val hitIndex = state.bugs.indexOfLast { bug ->
             isInside(x, y, bug.x, bug.y, BUG_HIT_HALF_SIZE)
         }
@@ -161,7 +188,22 @@ class GameViewModel(
         bonusRemainingMs = GameRules.BONUS_DURATION_SECONDS * GameRules.MILLIS_PER_SECOND
         _state.value = state.copy(bonus = null)
         _soundEvents.tryEmit(GameSoundEvent.BonusCollected)
-        _soundEvents.tryEmit(GameSoundEvent.BonusActivated(bugCount = state.bugs.size))
+        _soundEvents.tryEmit(
+            GameSoundEvent.BonusActivated(
+                bugCount = state.bugs.size + state.goldenBugs.size
+            )
+        )
+    }
+
+    private fun refreshGoldenBugReward() {
+        viewModelScope.launch {
+            goldPriceRepository.getLatestGoldPrice()
+                ?.let { price ->
+                    goldenBugRewardPoints = (price.buyRublesPerGram / GameRules.GOLD_BUG_REWARD_DIVISOR)
+                        .roundToInt()
+                        .coerceIn(1, GameRules.MAX_GOLD_BUG_REWARD_POINTS)
+                }
+        }
     }
 
     private fun startGameLoop() {
@@ -200,6 +242,7 @@ class GameViewModel(
         remainingTimeMs = (remainingTimeMs - deltaMs).coerceAtLeast(0L)
         spawnRemainingMs = (spawnRemainingMs - deltaMs).coerceAtLeast(0L)
         bonusSpawnRemainingMs = (bonusSpawnRemainingMs - deltaMs).coerceAtLeast(0L)
+        goldenBugSpawnRemainingMs = (goldenBugSpawnRemainingMs - deltaMs).coerceAtLeast(0L)
 
         if (remainingTimeMs == 0L) {
             finishRound(settings)
@@ -212,11 +255,16 @@ class GameViewModel(
             bonusRemainingMs = (bonusRemainingMs - deltaMs).coerceAtLeast(0L)
         }
 
-        val currentBugs = _state.value.bugs
+        val currentState = _state.value
         val movedBugs = if (bonusModeWasActive) {
-            currentBugs.map { bug -> moveBugWithTilt(bug, deltaSeconds) }
+            currentState.bugs.map { bug -> moveBugWithTilt(bug, deltaSeconds) }
         } else {
-            currentBugs.map { bug -> moveBugNormally(bug, settings.speed, deltaSeconds) }
+            currentState.bugs.map { bug -> moveBugNormally(bug, settings.speed, deltaSeconds) }
+        }
+        val movedGoldenBugs = if (bonusModeWasActive) {
+            currentState.goldenBugs.map { bug -> moveBugWithTilt(bug, deltaSeconds) }
+        } else {
+            currentState.goldenBugs.map { bug -> moveBugNormally(bug, settings.speed, deltaSeconds) }
         }
 
         val bugsAfterBonus = if (bonusModeWasActive && bonusRemainingMs == 0L) {
@@ -224,11 +272,14 @@ class GameViewModel(
         } else {
             movedBugs
         }
+        val goldenBugsAfterBonus = if (bonusModeWasActive && bonusRemainingMs == 0L) {
+            scatterBugs(movedGoldenBugs)
+        } else {
+            movedGoldenBugs
+        }
 
         val shouldSpawnBug =
-            bugsAfterBonus.size < settings.maxCockroaches &&
-                spawnRemainingMs == 0L
-
+            bugsAfterBonus.size < settings.maxCockroaches && spawnRemainingMs == 0L
         val bugs = if (shouldSpawnBug) {
             spawnRemainingMs = calculateSpawnInterval(activeDifficulty)
             bugsAfterBonus + createBug()
@@ -236,15 +287,23 @@ class GameViewModel(
             bugsAfterBonus
         }
 
-        val currentState = _state.value
-        val bonus = currentState.bonus ?: spawnBonusIfNeeded(settings)
+        val goldenBugs = if (goldenBugSpawnRemainingMs == 0L) {
+            goldenBugSpawnRemainingMs =
+                GameRules.GOLD_BUG_SPAWN_INTERVAL_SECONDS * GameRules.MILLIS_PER_SECOND
+            goldenBugsAfterBonus + createGoldenBug()
+        } else {
+            goldenBugsAfterBonus
+        }
+
+        val currentBonus = currentState.bonus ?: spawnBonusIfNeeded(settings)
 
         _state.value = currentState.copy(
             remainingSeconds = ceil(
                 remainingTimeMs / GameRules.MILLIS_PER_SECOND.toFloat()
             ).toInt(),
             bugs = bugs,
-            bonus = bonus
+            goldenBugs = goldenBugs,
+            bonus = currentBonus
         )
     }
 
@@ -291,6 +350,7 @@ class GameViewModel(
             phase = GamePhase.FINISHED,
             remainingSeconds = 0,
             bugs = emptyList(),
+            goldenBugs = emptyList(),
             bonus = null,
             result = result
         )
@@ -305,7 +365,8 @@ class GameViewModel(
         gameSpeed: Int,
         deltaSeconds: Float
     ): GameBug {
-        val speed = BASE_SPEED * bug.type.speedMultiplier * gameSpeed
+        val goldenSpeedMultiplier = if (bug.isGolden) GOLD_BUG_SPEED_MULTIPLIER else 1f
+        val speed = BASE_SPEED * bug.type.speedMultiplier * gameSpeed * goldenSpeedMultiplier
         var x = bug.x + bug.velocityX * speed * deltaSeconds
         var y = bug.y + bug.velocityY * speed * deltaSeconds
         var velocityX = bug.velocityX
@@ -333,6 +394,7 @@ class GameViewModel(
         bug: GameBug,
         deltaSeconds: Float
     ): GameBug {
+        val goldenSpeedMultiplier = if (bug.isGolden) GOLD_BUG_SPEED_MULTIPLIER else 1f
         var velocityX = bug.velocityX + tiltX * BONUS_ACCELERATION * deltaSeconds
         var velocityY = bug.velocityY + tiltY * BONUS_ACCELERATION * deltaSeconds
         val damping = exp(-BONUS_FRICTION * deltaSeconds)
@@ -347,8 +409,8 @@ class GameViewModel(
             velocityY *= scale
         }
 
-        var x = bug.x + velocityX * deltaSeconds
-        var y = bug.y + velocityY * deltaSeconds
+        var x = bug.x + velocityX * goldenSpeedMultiplier * deltaSeconds
+        var y = bug.y + velocityY * goldenSpeedMultiplier * deltaSeconds
 
         if (x < BUG_HALF_SIZE || x > 1f - BUG_HALF_SIZE) {
             velocityX = -velocityX * BONUS_BOUNCE_FACTOR
@@ -393,16 +455,28 @@ class GameViewModel(
     private fun createBug(): GameBug {
         val type = BugType.entries.random(random)
         val angle = random.nextDouble(0.0, PI * 2)
-        val directionX = cos(angle).toFloat()
-        val directionY = sin(angle).toFloat()
 
         return GameBug(
             id = nextBugId++,
             type = type,
             x = randomCoordinate(BUG_HALF_SIZE),
             y = randomCoordinate(BUG_HALF_SIZE),
-            velocityX = directionX,
-            velocityY = directionY * 0.8f
+            velocityX = cos(angle).toFloat(),
+            velocityY = sin(angle).toFloat() * 0.8f
+        )
+    }
+
+    private fun createGoldenBug(): GameBug {
+        val angle = random.nextDouble(0.0, PI * 2)
+
+        return GameBug(
+            id = nextBugId++,
+            type = BugType.BEETLE,
+            x = randomCoordinate(BUG_HALF_SIZE),
+            y = randomCoordinate(BUG_HALF_SIZE),
+            velocityX = cos(angle).toFloat(),
+            velocityY = sin(angle).toFloat() * 0.8f,
+            isGolden = true
         )
     }
 
@@ -436,6 +510,7 @@ class GameViewModel(
         const val BASE_SPEED = 0.14f
         const val BUG_HALF_SIZE = 0.07f
         const val BUG_HIT_HALF_SIZE = 0.09f
+        const val GOLD_BUG_HIT_HALF_SIZE = 0.11f
         const val BONUS_HALF_SIZE = 0.08f
         const val BONUS_HIT_HALF_SIZE = 0.11f
         const val BONUS_ACCELERATION = 1.8f
@@ -444,5 +519,6 @@ class GameViewModel(
         const val BONUS_BOUNCE_FACTOR = 0.65f
         const val BONUS_SCATTER_MIN_SPEED = 0.35f
         const val BONUS_SCATTER_MAX_SPEED = 0.8f
+        const val GOLD_BUG_SPEED_MULTIPLIER = 1.2f
     }
 }

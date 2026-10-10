@@ -11,6 +11,7 @@ sealed interface GameSoundEvent {
     data object Penalty : GameSoundEvent
     data object BonusCollected : GameSoundEvent
     data class BonusActivated(val bugCount: Int) : GameSoundEvent
+    data object GoldenBugCollected : GameSoundEvent
 }
 
 data class GameResult(
@@ -36,6 +37,7 @@ data class GameState(
     val penalties: Int = 0,
     val remainingSeconds: Int = 0,
     val bugs: List<GameBug> = emptyList(),
+    val goldenBugs: List<GameBug> = emptyList(),
     val bonus: GameBonus? = null,
     val result: GameResult? = null
 )

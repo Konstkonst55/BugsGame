@@ -96,6 +96,14 @@ class GameAudioManager(
             }
     }
 
+    fun pauseAllSounds() {
+        soundPool.autoPause()
+    }
+
+    fun resumeAllSounds() {
+        soundPool.autoResume()
+    }
+
     fun stopBugMovementSounds() {
         movementStreams.values.forEach(soundPool::stop)
         movementStreams.clear()
@@ -124,10 +132,8 @@ class GameAudioManager(
     }
 
     private fun randomPitch(): Float {
-        return random.nextFloat().coerceIn(0f, 1f).let { value ->
-            GameRules.MIN_SOUND_PITCH +
-                value * (GameRules.MAX_SOUND_PITCH - GameRules.MIN_SOUND_PITCH)
-        }
+        return GameRules.MIN_SOUND_PITCH +
+            random.nextFloat() * (GameRules.MAX_SOUND_PITCH - GameRules.MIN_SOUND_PITCH)
     }
 
     private companion object {

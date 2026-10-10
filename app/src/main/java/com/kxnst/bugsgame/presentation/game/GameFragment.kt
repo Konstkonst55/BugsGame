@@ -77,7 +77,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                     handlePhase(state)
 
                     if (state.phase == GamePhase.RUNNING) {
-                        audioManager.updateBugMovementSounds(state.bugs)
+                        audioManager.updateBugMovementSounds(state.bugs + state.goldenBugs)
                     } else {
                         audioManager.stopBugMovementSounds()
                     }
@@ -95,6 +95,7 @@ class GameFragment : Fragment(R.layout.fragment_game) {
                         GameSoundEvent.Penalty -> audioManager.playPenalty()
                         GameSoundEvent.BonusCollected -> audioManager.playBonusCollected()
                         is GameSoundEvent.BonusActivated -> audioManager.playBonusActivation(event.bugCount)
+                        GameSoundEvent.GoldenBugCollected -> audioManager.playBonusCollected()
                     }
                 }
             }
@@ -186,16 +187,21 @@ class GameFragment : Fragment(R.layout.fragment_game) {
     }
 
     private fun showRestartDialog() {
+        audioManager.pauseAllSounds()
+
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.game_restart_title)
             .setMessage(R.string.game_restart_message)
             .setPositiveButton(R.string.game_yes) { _, _ ->
+                audioManager.resumeAllSounds()
                 startRoundForCurrentUser()
             }
             .setNegativeButton(R.string.game_no) { _, _ ->
+                audioManager.resumeAllSounds()
                 viewModel.resumeRound()
             }
             .setOnCancelListener {
+                audioManager.resumeAllSounds()
                 viewModel.resumeRound()
             }
             .show()
@@ -253,18 +259,10 @@ class GameFragment : Fragment(R.layout.fragment_game) {
         binding.clFullscreenHud.isVisible = isFullscreen
 
         binding.ibFullscreen.setImageResource(
-            if (isFullscreen) {
-                R.drawable.ic_game_fullscreen_exit
-            } else {
-                R.drawable.ic_game_fullscreen
-            }
+            if (isFullscreen) R.drawable.ic_game_fullscreen_exit else R.drawable.ic_game_fullscreen
         )
         binding.ibFullscreen.contentDescription = getString(
-            if (isFullscreen) {
-                R.string.game_cd_exit_fullscreen
-            } else {
-                R.string.game_cd_enter_fullscreen
-            }
+            if (isFullscreen) R.string.game_cd_exit_fullscreen else R.string.game_cd_enter_fullscreen
         )
 
         val padding = if (isFullscreen) {

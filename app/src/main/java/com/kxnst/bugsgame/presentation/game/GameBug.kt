@@ -6,5 +6,6 @@ data class GameBug(
     val x: Float,
     val y: Float,
     val velocityX: Float,
-    val velocityY: Float
+    val velocityY: Float,
+    val isGolden: Boolean = false
 )

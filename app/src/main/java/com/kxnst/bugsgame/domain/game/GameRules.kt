@@ -24,7 +24,13 @@ object GameRules {
     const val SPAWN_INTERVAL_EASY_MS = 1400L
     const val SPAWN_INTERVAL_NORMAL_MS = 900L
     const val SPAWN_INTERVAL_HARD_MS = 500L
+
     const val BONUS_DURATION_SECONDS = 7
+    const val GOLD_BUG_SPAWN_INTERVAL_SECONDS = 20
+    const val GOLD_BUG_REWARD_DIVISOR = 100.0
+    const val DEFAULT_GOLD_BUG_REWARD_POINTS = 100
+    const val MAX_GOLD_BUG_REWARD_POINTS = 500
+
     const val MAX_BUG_SOUND_SOURCES = 3
     const val MIN_SOUND_PITCH = 0.85f
     const val MAX_SOUND_PITCH = 1.15f
