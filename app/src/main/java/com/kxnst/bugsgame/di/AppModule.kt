@@ -3,6 +3,9 @@ package com.kxnst.bugsgame.di
 import androidx.room.Room
 
 import com.kxnst.bugsgame.data.database.BugsGameDatabase
+import com.kxnst.bugsgame.data.gold.CbrGoldPriceNetworkFactory
+import com.kxnst.bugsgame.data.gold.CbrGoldPriceRepository
+import com.kxnst.bugsgame.data.gold.CbrMetalsApi
 import com.kxnst.bugsgame.data.settings.GameSettingsRepository
 import com.kxnst.bugsgame.data.settings.SharedPreferencesGameSettingsRepository
 import com.kxnst.bugsgame.data.user.RoomUserRepository
@@ -10,6 +13,7 @@ import com.kxnst.bugsgame.data.user.UserRepository
 import com.kxnst.bugsgame.data.zodiac.AndroidResourceZodiacRepository
 import com.kxnst.bugsgame.data.zodiac.ZodiacRepository
 import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
+import com.kxnst.bugsgame.domain.gold.GoldPriceRepository
 import com.kxnst.bugsgame.domain.zodiac.ZodiacCalculator
 import com.kxnst.bugsgame.presentation.game.GameAudioManager
 import com.kxnst.bugsgame.presentation.game.GameViewModel
@@ -34,6 +38,8 @@ val appModule = module {
     single<UserRepository> { RoomUserRepository(get()) }
     single<GameSettingsRepository> { SharedPreferencesGameSettingsRepository(androidContext()) }
     single<ZodiacRepository> { AndroidResourceZodiacRepository(androidContext().resources) }
+    single<CbrMetalsApi> { CbrGoldPriceNetworkFactory.createApi() }
+    single<GoldPriceRepository> { CbrGoldPriceRepository(get(), androidContext()) }
     single { ZodiacCalculator() }
     single { CalculateRoundScoreUseCase() }
     single { GameAudioManager(androidContext()) }
@@ -41,7 +47,7 @@ val appModule = module {
     viewModel { PlayerViewModel(get(), get(), get()) }
     viewModel { UserSessionViewModel(get()) }
     viewModel { GameSettingsViewModel(get()) }
-    viewModel { GameViewModel(get(), get(), get()) }
+    viewModel { GameViewModel(get(), get(), get(), get()) }
 }
 
 private const val DATABASE_NAME = "bugsgame.db"
