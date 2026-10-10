@@ -141,4 +141,16 @@
     <string name="home_text_difficulty_stars_two">⭐⭐</string>
     <string name="home_text_difficulty_stars_three">⭐⭐⭐</string>
 
+    <string name="gold_widget_title">Курс золота ЦБ</string>
+    <string name="gold_widget_title_compact">Курс золота ЦБ (2×2)</string>
+    <string name="gold_widget_title_detailed">Курс золота ЦБ (3×3)</string>
+    <string name="gold_widget_description">Цена золота за грамм по данным Банка России</string>
+    <string name="gold_widget_cd_compact">Курс золота ЦБ. Нажмите для обновления</string>
+    <string name="gold_widget_cd_detailed">Курс покупки и продажи золота ЦБ. Нажмите для обновления</string>
+    <string name="gold_widget_cd_trend">Изменение курса золота</string>
+    <string name="gold_widget_price_unavailable">—₽</string>
+    <string name="gold_widget_buy_unavailable">Купить: —</string>
+    <string name="gold_widget_sell_unavailable">Продать: —</string>
+    <string name="gold_widget_buy">Купить: %1$s</string>
+    <string name="gold_widget_sell">Продать: %1$s</string>
 </resources>

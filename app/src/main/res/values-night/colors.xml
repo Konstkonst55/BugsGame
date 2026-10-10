@@ -142,4 +142,5 @@
     <color name="surfaceContainerHighest_highContrast">#42484A</color>
     <color name="gender_male">#9DBAEE</color>
     <color name="gender_female">#F0A7C1</color>
+    <color name="onGoldSphere">#3E2723</color>
 </resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetGoldRootCompact"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/gold_widget_cd_compact">
+
+    <ImageView
+        android:id="@+id/ivGoldSphereCompact"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:scaleType="fitCenter"
+        android:src="@drawable/bg_gold_widget_sphere_square" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/padding_small"
+        android:paddingEnd="@dimen/padding_small">
+
+        <TextView
+            android:id="@+id/tvGoldPriceCompact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/raleway"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="@string/gold_widget_price_unavailable"
+            android:textColor="@color/onGoldSphere"
+            android:textFontWeight="@integer/font_black"
+            android:textSize="@dimen/text_title_medium" />
+
+        <ImageView
+            android:id="@+id/ivGoldTrendCompact"
+            android:layout_width="@dimen/size_medium"
+            android:layout_height="@dimen/size_medium"
+            android:layout_marginStart="@dimen/padding_micro"
+            android:contentDescription="@string/gold_widget_cd_trend"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</FrameLayout>

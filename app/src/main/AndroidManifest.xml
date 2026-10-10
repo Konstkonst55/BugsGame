@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".BugsGameApplication"
         android:allowBackup="true"
@@ -21,6 +23,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".presentation.widget.gold.GoldPriceWidgetProvider"
+            android:exported="true"
+            android:label="@string/gold_widget_title_compact">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/gold_price_widget_info" />
+        </receiver>
+
+        <receiver
+            android:name=".presentation.widget.gold.GoldPriceDetailedWidgetProvider"
+            android:exported="true"
+            android:label="@string/gold_widget_title_detailed">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/gold_price_widget_info_detailed" />
+        </receiver>
+
     </application>
 
 </manifest>
