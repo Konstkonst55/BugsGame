@@ -122,7 +122,7 @@ N_{base}=\max\left(\left\lfloor\frac{1000T}{900}\right\rfloor,\ 1\right)
 $$
 
 $$
-R=\operatorname{clamp}\left(\frac{P}{2N_{base}},\ 0,\ 1.4\right)
+R=\mathop{\mathrm{clamp}}\left(\frac{P}{2N_{base}},\ 0,\ 1.4\right)
 $$
 
 Множитель сложности:
@@ -148,13 +148,13 @@ $$
 Множитель продолжительности раунда:
 
 $$
-F_t=\operatorname{clamp}\left(\sqrt{\operatorname{clamp}\left(\frac{T}{60},\ 0.5,\ 2\right)},\ 0.75,\ 1.25\right)
+F_t=\mathop{\mathrm{clamp}}\left(\sqrt{\mathop{\mathrm{clamp}}\left(\frac{T}{60},\ 0.5,\ 2\right)},\ 0.75,\ 1.25\right)
 $$
 
 Итоговый результат:
 
 $$
-Score=\operatorname{clamp}\left(\operatorname{round}(R\cdot500\cdot F_d\cdot F_s\cdot F_n\cdot F_t),\ 0,\ 1000\right)
+Score=\mathop{\mathrm{clamp}}\left(\mathop{\mathrm{round}}(R\cdot500\cdot F_d\cdot F_s\cdot F_n\cdot F_t),\ 0,\ 1000\right)
 $$
 
 Таким образом, штраф уменьшает учитываемые очки на 1,5 за каждый промах, а итоговый результат ограничен диапазоном 0–1000. Коэффициенты сложности, скорости, количества насекомых и длительности корректируют результат относительно базовых условий.
@@ -182,12 +182,12 @@ $$
 $$
 Q_r=\begin{cases}
 0, & H=0\\
-\operatorname{clamp}\left(\frac{1500-\bar t}{1500-250},\ 0,\ 1\right), & H>0
+\mathop{\mathrm{clamp}}\left(\frac{1500-\bar t}{1500-250},\ 0,\ 1\right), & H>0
 \end{cases}
 $$
 
 $$
-Q_p=\operatorname{clamp}\left(\frac{P_w/15}{0.4},\ 0,\ 1\right)
+Q_p=\mathop{\mathrm{clamp}}\left(\frac{P_w/15}{0.4},\ 0,\ 1\right)
 $$
 
 где $H$ – попадания, $M$ – промахи, $\bar t$ – среднее время реакции в миллисекундах, $P_w$ – очки за обычных насекомых за окно анализа.
@@ -209,19 +209,19 @@ $$
 Внутренний уровень адаптации ограничен диапазоном $−2…+2$. На его основе пересчитываются параметры:
 
 $$
-s=\operatorname{clamp}(s_0+a,\ 1,\ 10)
+s=\mathop{\mathrm{clamp}}(s_0+a,\ 1,\ 10)
 $$
 
 $$
-n=\operatorname{clamp}(n_0+a,\ 1,\ 10)
+n=\mathop{\mathrm{clamp}}(n_0+a,\ 1,\ 10)
 $$
 
 $$
-I=\operatorname{clamp}\left(\operatorname{round}\left(\frac{I_0}{1+0.10a}\right),\ 350,\ 2000\right)
+I=\mathop{\mathrm{clamp}}\left(\mathop{\mathrm{round}}\left(\frac{I_0}{1+0.10a}\right),\ 350,\ 2000\right)
 $$
 
 $$
-f=\operatorname{clamp}(f_0+0.08a,\ 0.10,\ 0.70)
+f=\mathop{\mathrm{clamp}}(f_0+0.08a,\ 0.10,\ 0.70)
 $$
 
 Здесь $a$ – текущая ступень адаптации; $s₀$, $n₀$, $I₀$ и $f₀$ – базовые параметры выбранного профиля; $f$ – доля мух. При снижении эффективности игра замедляется, число одновременно активных насекомых и доля быстрых насекомых уменьшаются. При высокой эффективности параметры изменяются в обратную сторону. Адаптация сбрасывается к базовому уровню при запуске нового раунда.
