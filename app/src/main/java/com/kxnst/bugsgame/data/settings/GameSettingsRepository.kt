@@ -12,4 +12,6 @@ interface GameSettingsRepository {
     fun updateBonusIntervalSeconds(value: Int)
 
     fun updateRoundDurationSeconds(value: Int)
+
+    fun updateAdaptiveDifficultyEnabled(value: Boolean)
 }

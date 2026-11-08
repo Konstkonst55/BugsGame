@@ -88,6 +88,8 @@
     <string name="settings_max_cockroaches_title">Максимум тараканов</string>
     <string name="settings_bonus_interval_title">Интервал появления бонусов, с</string>
     <string name="settings_round_duration_title">Длительность раунда, с</string>
+    <string name="settings_adaptive_difficulty_title">Адаптивная сложность</string>
+    <string name="settings_adaptive_difficulty_description">Игра будет подстраивать скорость, количество и типы жуков под ваши результаты. Начальный уровень определяется сложностью, выбранной при регистрации.</string>
     <string name="settings_cd_speed_picker">Скорость игры</string>
     <string name="settings_cd_max_cockroaches_picker">Максимальное количество тараканов на экране</string>
     <string name="settings_cd_bonus_interval_picker">Интервал появления бонусов в секундах</string>

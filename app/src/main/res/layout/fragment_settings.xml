@@ -135,6 +135,38 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/tvAdaptiveDifficulty"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_adaptive_difficulty_title"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toStartOf="@id/swAdaptiveDifficulty"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilRoundDuration" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swAdaptiveDifficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tvAdaptiveDifficultyDescription"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tvAdaptiveDifficulty" />
+
+            <TextView
+                android:id="@+id/tvAdaptiveDifficultyDescription"
+                style="@style/Widget.BugsGame.TextView"
+                android:layout_width="@dimen/size_zero"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_adaptive_difficulty_description"
+                android:textColor="@color/onSurfaceVariant"
+                android:textSize="@dimen/text_body_small"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintEnd_toStartOf="@id/swAdaptiveDifficulty"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAdaptiveDifficulty" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/bChangeUser"
                 style="@style/Widget.Material3.Button.TextButton"
@@ -144,7 +176,7 @@
                 android:text="@string/settings_change_user"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tilRoundDuration" />
+                app:layout_constraintTop_toBottomOf="@id/tvAdaptiveDifficultyDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

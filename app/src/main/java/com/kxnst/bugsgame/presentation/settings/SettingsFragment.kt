@@ -27,6 +27,10 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
+    private companion object {
+        const val ENABLED_ALPHA = 1f
+        const val DISABLED_ALPHA = 0.45f
+    }
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: GameSettingsViewModel by viewModel()
@@ -40,6 +44,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         _binding = FragmentSettingsBinding.bind(view)
 
         setupDropdowns()
+        setupAdaptiveDifficulty()
         setupUserSwitch()
         observeSettings()
     }
@@ -67,6 +72,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             GameRules.MIN_ROUND_DURATION_SECONDS..
                 GameRules.MAX_ROUND_DURATION_SECONDS
         ) { viewModel.updateRoundDurationSeconds(it) }
+    }
+
+    private fun setupAdaptiveDifficulty() {
+        binding.swAdaptiveDifficulty.setOnCheckedChangeListener { _, isChecked ->
+            if (!isUpdatingFromState) {
+                viewModel.updateAdaptiveDifficultyEnabled(isChecked)
+            }
+        }
     }
 
     private fun setupUserSwitch() {
@@ -147,11 +160,28 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
                         settings.roundDurationSeconds.toString(),
                         false
                     )
+                    binding.swAdaptiveDifficulty.isChecked = settings.adaptiveDifficultyEnabled
+                    setDifficultyControlsEnabled(!settings.adaptiveDifficultyEnabled)
 
                     isUpdatingFromState = false
                 }
             }
         }
+    }
+
+    private fun setDifficultyControlsEnabled(isEnabled: Boolean) {
+        binding.tvSpeed.isEnabled = isEnabled
+        binding.tvMaxCockroaches.isEnabled = isEnabled
+        binding.tilSpeed.isEnabled = isEnabled
+        binding.actvSpeed.isEnabled = isEnabled
+        binding.tilMaxCockroaches.isEnabled = isEnabled
+        binding.actvMaxCockroaches.isEnabled = isEnabled
+
+        val alpha = if (isEnabled) ENABLED_ALPHA else DISABLED_ALPHA
+        binding.tvSpeed.alpha = alpha
+        binding.tvMaxCockroaches.alpha = alpha
+        binding.tilSpeed.alpha = alpha
+        binding.tilMaxCockroaches.alpha = alpha
     }
 
     override fun onDestroyView() {

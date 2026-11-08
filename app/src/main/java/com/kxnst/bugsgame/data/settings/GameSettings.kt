@@ -4,5 +4,6 @@ data class GameSettings(
     val speed: Int,
     val maxCockroaches: Int,
     val bonusIntervalSeconds: Int,
-    val roundDurationSeconds: Int
+    val roundDurationSeconds: Int,
+    val adaptiveDifficultyEnabled: Boolean = false
 )

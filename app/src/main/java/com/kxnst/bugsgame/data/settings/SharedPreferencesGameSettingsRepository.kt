@@ -50,6 +50,11 @@ class SharedPreferencesGameSettingsRepository(
         updateState { it.copy(bonusIntervalSeconds = safeValue) }
     }
 
+    override fun updateAdaptiveDifficultyEnabled(value: Boolean) {
+        preferences.edit { putBoolean(KEY_ADAPTIVE_DIFFICULTY_ENABLED, value) }
+        updateState { it.copy(adaptiveDifficultyEnabled = value) }
+    }
+
     override fun updateRoundDurationSeconds(value: Int) {
         val safeValue = value.coerceIn(
             GameRules.MIN_ROUND_DURATION_SECONDS,
@@ -89,6 +94,10 @@ class SharedPreferencesGameSettingsRepository(
             ).coerceIn(
                 GameRules.MIN_ROUND_DURATION_SECONDS,
                 GameRules.MAX_ROUND_DURATION_SECONDS
+            ),
+            adaptiveDifficultyEnabled = preferences.getBoolean(
+                KEY_ADAPTIVE_DIFFICULTY_ENABLED,
+                false
             )
         )
     }
@@ -103,5 +112,6 @@ class SharedPreferencesGameSettingsRepository(
         const val KEY_MAX_COCKROACHES = "max_cockroaches"
         const val KEY_BONUS_INTERVAL_SECONDS = "bonus_interval_seconds"
         const val KEY_ROUND_DURATION_SECONDS = "round_duration_seconds"
+        const val KEY_ADAPTIVE_DIFFICULTY_ENABLED = "adaptive_difficulty_enabled"
     }
 }

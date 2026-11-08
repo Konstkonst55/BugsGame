@@ -25,4 +25,8 @@ class GameSettingsViewModel(
     fun updateRoundDurationSeconds(value: Int) {
         repository.updateRoundDurationSeconds(value)
     }
+
+    fun updateAdaptiveDifficultyEnabled(value: Boolean) {
+        repository.updateAdaptiveDifficultyEnabled(value)
+    }
 }
