@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.kxnst.bugsgame.data.settings.GameSettings
 import com.kxnst.bugsgame.data.settings.GameSettingsRepository
 import com.kxnst.bugsgame.data.user.UserRepository
+import com.kxnst.bugsgame.domain.game.AdaptiveDifficultyController
+import com.kxnst.bugsgame.domain.game.AdaptiveDifficultyParameters
 import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
 import com.kxnst.bugsgame.domain.game.GameRules
 import com.kxnst.bugsgame.domain.game.RoundScoreInput
@@ -38,7 +40,8 @@ class GameViewModel(
     private val settingsRepository: GameSettingsRepository,
     private val userRepository: UserRepository,
     private val calculateRoundScore: CalculateRoundScoreUseCase,
-    private val goldPriceRepository: GoldPriceRepository
+    private val goldPriceRepository: GoldPriceRepository,
+    private val adaptiveDifficultyController: AdaptiveDifficultyController
 ) : ViewModel() {
     private val _state = MutableStateFlow(GameState())
     val state: StateFlow<GameState> = _state.asStateFlow()
@@ -54,6 +57,7 @@ class GameViewModel(
     private var activeSettings: GameSettings? = null
     private var activeUserName: String? = null
     private var remainingTimeMs = 0L
+    private var gameElapsedTimeMs = 0L
     private var spawnRemainingMs = 0L
     private var bonusSpawnRemainingMs = 0L
     private var bonusRemainingMs = 0L
@@ -61,6 +65,11 @@ class GameViewModel(
     private var nextBugId = 0L
     private var nextRoundId = 0L
     private var activeDifficulty = GameRules.DEFAULT_DIFFICULTY
+    private var adaptiveBaseParameters: AdaptiveDifficultyParameters? = null
+    private var adaptiveParameters: AdaptiveDifficultyParameters? = null
+    private var adaptiveAdjustment = 0
+    private var adaptiveEvaluationRemainingMs = 0L
+    private val adaptiveInteractions = mutableListOf<AdaptiveDifficultyInteraction>()
     private var tiltX = 0f
     private var tiltY = 0f
     private var goldenBugRewardPoints = GameRules.DEFAULT_GOLD_BUG_REWARD_POINTS
@@ -85,6 +94,18 @@ class GameViewModel(
             GameRules.MIN_DIFFICULTY,
             GameRules.MAX_DIFFICULTY
         )
+        adaptiveBaseParameters = if (settings.adaptiveDifficultyEnabled) {
+            adaptiveDifficultyController.createBaseParameters(activeDifficulty)
+        } else {
+            null
+        }
+        adaptiveAdjustment = 0
+        adaptiveParameters = adaptiveBaseParameters?.let { baseParameters ->
+            adaptiveDifficultyController.createParameters(baseParameters, adaptiveAdjustment)
+        }
+        adaptiveEvaluationRemainingMs = ADAPTIVE_EVALUATION_INTERVAL_MS
+        adaptiveInteractions.clear()
+        gameElapsedTimeMs = 0L
         remainingTimeMs = settings.roundDurationSeconds * GameRules.MILLIS_PER_SECOND
         spawnRemainingMs = 0L
         bonusSpawnRemainingMs = settings.bonusIntervalSeconds * GameRules.MILLIS_PER_SECOND
@@ -167,12 +188,14 @@ class GameViewModel(
         }
 
         if (hitIndex == -1) {
+            recordAdaptiveMiss()
             _state.value = state.copy(penalties = state.penalties + 1)
             _soundEvents.tryEmit(GameSoundEvent.Penalty)
             return
         }
 
         val hitBug = state.bugs[hitIndex]
+        recordAdaptiveHit(hitBug)
         val updatedBugs = state.bugs.toMutableList().apply {
             removeAt(hitIndex)
         }
@@ -238,6 +261,7 @@ class GameViewModel(
     private fun updateGame(deltaSeconds: Float) {
         val settings = activeSettings ?: return
         val deltaMs = (deltaSeconds * GameRules.MILLIS_PER_SECOND).toLong()
+        gameElapsedTimeMs += deltaMs
 
         remainingTimeMs = (remainingTimeMs - deltaMs).coerceAtLeast(0L)
         spawnRemainingMs = (spawnRemainingMs - deltaMs).coerceAtLeast(0L)
@@ -255,16 +279,26 @@ class GameViewModel(
             bonusRemainingMs = (bonusRemainingMs - deltaMs).coerceAtLeast(0L)
         }
 
+        if (settings.adaptiveDifficultyEnabled) {
+            updateAdaptiveDifficulty(deltaMs)
+        }
+
+        val currentParameters = adaptiveParameters
+        val gameSpeed = currentParameters?.speed ?: settings.speed
+        val maxCockroaches = currentParameters?.maxCockroaches ?: settings.maxCockroaches
+        val spawnIntervalMs = currentParameters?.spawnIntervalMs
+        val fastBugShare = currentParameters?.fastBugShare
+
         val currentState = _state.value
         val movedBugs = if (bonusModeWasActive) {
             currentState.bugs.map { bug -> moveBugWithTilt(bug, deltaSeconds) }
         } else {
-            currentState.bugs.map { bug -> moveBugNormally(bug, settings.speed, deltaSeconds) }
+            currentState.bugs.map { bug -> moveBugNormally(bug, gameSpeed, deltaSeconds) }
         }
         val movedGoldenBugs = if (bonusModeWasActive) {
             currentState.goldenBugs.map { bug -> moveBugWithTilt(bug, deltaSeconds) }
         } else {
-            currentState.goldenBugs.map { bug -> moveBugNormally(bug, settings.speed, deltaSeconds) }
+            currentState.goldenBugs.map { bug -> moveBugNormally(bug, gameSpeed, deltaSeconds) }
         }
 
         val bugsAfterBonus = if (bonusModeWasActive && bonusRemainingMs == 0L) {
@@ -279,10 +313,10 @@ class GameViewModel(
         }
 
         val shouldSpawnBug =
-            bugsAfterBonus.size < settings.maxCockroaches && spawnRemainingMs == 0L
+            bugsAfterBonus.size < maxCockroaches && spawnRemainingMs == 0L
         val bugs = if (shouldSpawnBug) {
-            spawnRemainingMs = calculateSpawnInterval(activeDifficulty)
-            bugsAfterBonus + createBug()
+            spawnRemainingMs = spawnIntervalMs ?: calculateSpawnInterval(activeDifficulty)
+            bugsAfterBonus + createBug(fastBugShare)
         } else {
             bugsAfterBonus
         }
@@ -307,6 +341,69 @@ class GameViewModel(
         )
     }
 
+    private fun recordAdaptiveHit(bug: GameBug) {
+        if (activeSettings?.adaptiveDifficultyEnabled != true) {
+            return
+        }
+
+        val reactionTimeMs = (gameElapsedTimeMs - bug.spawnedAtMs).coerceAtLeast(0L)
+        adaptiveInteractions += AdaptiveDifficultyInteraction(
+            timestampMs = gameElapsedTimeMs,
+            isHit = true,
+            reactionTimeMs = reactionTimeMs,
+            points = bug.type.points
+        )
+    }
+
+    private fun recordAdaptiveMiss() {
+        if (activeSettings?.adaptiveDifficultyEnabled != true) {
+            return
+        }
+
+        adaptiveInteractions += AdaptiveDifficultyInteraction(
+            timestampMs = gameElapsedTimeMs,
+            isHit = false,
+            reactionTimeMs = null,
+            points = 0
+        )
+    }
+
+    private fun updateAdaptiveDifficulty(deltaMs: Long) {
+        adaptiveEvaluationRemainingMs -= deltaMs
+        if (adaptiveEvaluationRemainingMs > 0L) {
+            return
+        }
+
+        adaptiveEvaluationRemainingMs = ADAPTIVE_EVALUATION_INTERVAL_MS
+        adaptiveInteractions.removeAll { interaction ->
+            gameElapsedTimeMs - interaction.timestampMs > ADAPTIVE_WINDOW_MS
+        }
+
+        val hits = adaptiveInteractions.filter { it.isHit }
+        val misses = adaptiveInteractions.size - hits.size
+        val averageReactionTimeMs = if (hits.isEmpty()) {
+            0L
+        } else {
+            hits.mapNotNull { it.reactionTimeMs }.average().toLong()
+        }
+        val points = hits.sumOf { it.points }
+
+        val updatedAdjustment = adaptiveDifficultyController.evaluateAdjustment(
+            currentAdjustment = adaptiveAdjustment,
+            hits = hits.size,
+            misses = misses,
+            averageReactionTimeMs = averageReactionTimeMs,
+            points = points
+        )
+
+        if (updatedAdjustment != adaptiveAdjustment) {
+            adaptiveAdjustment = updatedAdjustment
+            adaptiveParameters = adaptiveBaseParameters?.let { baseParameters ->
+                adaptiveDifficultyController.createParameters(baseParameters, adaptiveAdjustment)
+            }
+        }
+    }
+
     private fun spawnBonusIfNeeded(settings: GameSettings): GameBonus? {
         if (bonusSpawnRemainingMs > 0L || bonusRemainingMs > 0L) {
             return null
@@ -323,13 +420,16 @@ class GameViewModel(
     private fun finishRound(settings: GameSettings) {
         val state = _state.value
         val userName = activeUserName ?: return
+        val scoreParameters = adaptiveBaseParameters
+        val scoreSpeed = scoreParameters?.speed ?: settings.speed
+        val scoreMaxCockroaches = scoreParameters?.maxCockroaches ?: settings.maxCockroaches
         val finalScore = calculateRoundScore.execute(
             RoundScoreInput(
                 points = state.score,
                 penalties = state.penalties,
                 difficulty = activeDifficulty,
-                speed = settings.speed,
-                maxCockroaches = settings.maxCockroaches,
+                speed = scoreSpeed,
+                maxCockroaches = scoreMaxCockroaches,
                 roundDurationSeconds = settings.roundDurationSeconds
             )
         )
@@ -342,8 +442,8 @@ class GameViewModel(
             finalScore = finalScore,
             difficulty = activeDifficulty,
             roundDurationSeconds = settings.roundDurationSeconds,
-            speed = settings.speed,
-            maxCockroaches = settings.maxCockroaches
+            speed = scoreSpeed,
+            maxCockroaches = scoreMaxCockroaches
         )
 
         _state.value = state.copy(
@@ -452,8 +552,14 @@ class GameViewModel(
         }
     }
 
-    private fun createBug(): GameBug {
-        val type = BugType.entries.random(random)
+    private fun createBug(fastBugShare: Float?): GameBug {
+        val type = if (fastBugShare == null) {
+            BugType.entries.random(random)
+        } else if (random.nextFloat() < fastBugShare) {
+            BugType.FLY
+        } else {
+            listOf(BugType.BEETLE, BugType.ANT).random(random)
+        }
         val angle = random.nextDouble(0.0, PI * 2)
 
         return GameBug(
@@ -462,7 +568,8 @@ class GameViewModel(
             x = randomCoordinate(BUG_HALF_SIZE),
             y = randomCoordinate(BUG_HALF_SIZE),
             velocityX = cos(angle).toFloat(),
-            velocityY = sin(angle).toFloat() * 0.8f
+            velocityY = sin(angle).toFloat() * 0.8f,
+            spawnedAtMs = gameElapsedTimeMs
         )
     }
 
@@ -505,6 +612,8 @@ class GameViewModel(
 
     private companion object {
         const val GAME_TICK_DELAY_MS = 16L
+        const val ADAPTIVE_EVALUATION_INTERVAL_MS = 5_000L
+        const val ADAPTIVE_WINDOW_MS = 15_000L
         const val NANOS_PER_SECOND = 1_000_000_000f
         const val MAX_DELTA_SECONDS = 0.05f
         const val BASE_SPEED = 0.14f
@@ -522,3 +631,10 @@ class GameViewModel(
         const val GOLD_BUG_SPEED_MULTIPLIER = 1.2f
     }
 }
+
+private data class AdaptiveDifficultyInteraction(
+    val timestampMs: Long,
+    val isHit: Boolean,
+    val reactionTimeMs: Long?,
+    val points: Int
+)

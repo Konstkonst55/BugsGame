@@ -12,6 +12,7 @@ import com.kxnst.bugsgame.data.user.RoomUserRepository
 import com.kxnst.bugsgame.data.user.UserRepository
 import com.kxnst.bugsgame.data.zodiac.AndroidResourceZodiacRepository
 import com.kxnst.bugsgame.data.zodiac.ZodiacRepository
+import com.kxnst.bugsgame.domain.game.AdaptiveDifficultyController
 import com.kxnst.bugsgame.domain.game.CalculateRoundScoreUseCase
 import com.kxnst.bugsgame.domain.gold.GoldPriceRepository
 import com.kxnst.bugsgame.domain.zodiac.ZodiacCalculator
@@ -42,12 +43,13 @@ val appModule = module {
     single<GoldPriceRepository> { CbrGoldPriceRepository(get(), androidContext()) }
     single { ZodiacCalculator() }
     single { CalculateRoundScoreUseCase() }
+    single { AdaptiveDifficultyController() }
     single { GameAudioManager(androidContext()) }
 
     viewModel { PlayerViewModel(get(), get(), get()) }
     viewModel { UserSessionViewModel(get()) }
     viewModel { GameSettingsViewModel(get()) }
-    viewModel { GameViewModel(get(), get(), get(), get()) }
+    viewModel { GameViewModel(get(), get(), get(), get(), get()) }
 }
 
 private const val DATABASE_NAME = "bugsgame.db"
